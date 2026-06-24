@@ -113,7 +113,7 @@ const Header = () => {
             <Container fluid className="navbar-inner">
                <Row className="flex-grow-1">
                   <Col lg={4} md={6} className="align-items-center d-flex">
-                     <Nav.Item as="li" className="nav-item dropdown search-width pt-2 pt-lg-0">
+                     {/* <Nav.Item as="li" className="nav-item dropdown search-width pt-2 pt-lg-0">
                         <div className="form-group input-group mb-0 search-input">
                            <input type="text" className="form-control"
                               placeholder="Type here to search..." />{" "}
@@ -132,7 +132,7 @@ const Header = () => {
                               </svg>
                            </span>
                         </div>
-                     </Nav.Item>
+                     </Nav.Item> */}
                   </Col>
                   <Col lg={8} md={6}
                      className="d-flex justify-content-end align-items-center">

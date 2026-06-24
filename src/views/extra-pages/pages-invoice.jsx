@@ -14,7 +14,7 @@ const Invoice = () => {
                         <Card.Body>
                             <Row className="align-items-center">
                                 <Col xs={6}>
-                                    <img src={logoImg} className="img-fluid avatar-80"  />
+                                    <img src={logoImg} className="img-fluid avatar-80" />
                                 </Col>
                                 <Col xs={6}>
                                     <h4 className="mb-0 float-end">Invoice</h4>
@@ -50,16 +50,16 @@ const Invoice = () => {
                                                         <p className="mb-0">PO Box 16122 Collins Street West<br />Victoria 8007
                                                             Australia<br />
                                                             Phone: +123 456 7890<br />
-                                                            Email: demo@XRay.com<br />
-                                                            Web: www.XRay.com
+                                                            Email: demo@Medsky.com<br />
+                                                            Web: www.Medsky.com
                                                         </p>
                                                     </td>
                                                     <td>
                                                         <p className="mb-0">PO Box 16122 Collins Street West<br />Victoria 8007
                                                             Australia<br />
                                                             Phone: +123 456 7890<br />
-                                                            Email: demo@XRay.com<br />
-                                                            Web: www.XRay.com
+                                                            Email: demo@Medsky.com<br />
+                                                            Web: www.Medsky.com
                                                         </p>
                                                     </td>
                                                 </tr>

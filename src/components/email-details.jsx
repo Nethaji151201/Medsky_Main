@@ -152,8 +152,8 @@ const EmailDetails = (props) => {
                                     <div className="iq-subject-info">
                                         <img src={user05} className="img-fluid rounded-circle avatar-80" alt="#" loading="lazy" />
                                         <div className="iq-subject-status align-self-center">
-                                            <h6 className="mb-0">XRay team
-                                                {/* <a href="dummy@XRay.com">
+                                            <h6 className="mb-0">Medsky team
+                                                {/* <a href="dummy@Medsky.com">
                                                     <span>dummy@xray.com</span>
                                                 </a> */}
                                             </h6>

@@ -19,7 +19,7 @@ const ChatData = (props) => {
         setShowEmojiPicker(!showEmojiPicker);
     };
 
-    const handleEmojiClick = ( ) => {
+    const handleEmojiClick = () => {
         // Handle the emoji selection 
         setShowEmojiPicker(false); // Optionally close the picker after selecting
     };
@@ -151,7 +151,7 @@ const ChatData = (props) => {
                     <div className="chat-detail">
                         <div className="chat-message">
                             <p>Absolutely!</p>
-                            <p>XRay Dashboard is the responsive bootstrap 5 admin
+                            <p>Medsky Dashboard is the responsive bootstrap 5 admin
                                 template.</p>
                         </div>
                     </div>

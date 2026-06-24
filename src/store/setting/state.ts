@@ -6,7 +6,7 @@ export const initialState: SettingState = {
   storeKey: "xraysetting-react",
   setting: {
     app_name: {
-      value: "XRay",
+      value: "Medsky",
     },
     theme_scheme_direction: {
       value: "ltr",
@@ -61,7 +61,7 @@ export const defaultState: SettingDefaultState = {
       target: '[data-setting="app_name"]',
       choices: [],
       type: "text",
-      value: "XRay",
+      value: "Medsky",
     },
     theme_scheme_direction: {
       target: "html",

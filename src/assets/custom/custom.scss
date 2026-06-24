@@ -813,3 +813,11 @@ body[data-rr-ui-modal-open] {
 [data-bs-theme=dark] .list-group-item-light:not(.list-group-item-action:hover) {
     color: #495057 !important;
 }
+
+// Custom Divider
+.divider {
+    height: 1px;
+    background-color: var(--bs-border-color-translucent, #dee2e6);
+    margin: 1.25rem 0;
+    width: 100%;
+}

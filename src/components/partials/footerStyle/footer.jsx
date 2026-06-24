@@ -19,7 +19,7 @@ const FooterStyle = () => {
                         <Col lg={6} md={12}>
                             <h6 className="right-panel mb-0 d-flex justify-content-center justify-content-lg-end">
 
-                                Copyright{" "}{currentYear}{" "}<a href="#" className="px-1"> XRay </a> All Rights Reserved.
+                                Copyright{" "}{currentYear}{" "}<a href="#" className="px-1"> Medsky </a> All Rights Reserved.
                             </h6>
                         </Col>
                     </Row>

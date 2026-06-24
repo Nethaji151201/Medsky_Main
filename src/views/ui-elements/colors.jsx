@@ -12,7 +12,7 @@ const Colors = () => {
           <Card>
             <div className="card-header d-flex justify-content-between">
               <div className="header-title">
-                <h4 className="card-title">XRay Color</h4>
+                <h4 className="card-title">Medsky Color</h4>
               </div>
             </div>
             <Card.Body>
@@ -61,7 +61,7 @@ const Colors = () => {
           <Card>
             <div className="card-header d-flex justify-content-between">
               <div className="header-title">
-                <h4 className="card-title">XRay Color</h4>
+                <h4 className="card-title">Medsky Color</h4>
               </div>
             </div>
             <Card.Body>
@@ -118,7 +118,7 @@ const Colors = () => {
           <Card>
             <div className="card-header d-flex justify-content-between">
               <div className="header-title">
-                <h4 className="card-title">XRay Text Color</h4>
+                <h4 className="card-title">Medsky Text Color</h4>
               </div>
             </div>
             <Card.Body>
@@ -150,7 +150,7 @@ const Colors = () => {
           <Card>
             <div className="card-header d-flex justify-content-between">
               <div className="header-title">
-                <h4 className="card-title">XRay Text Color</h4>
+                <h4 className="card-title">Medsky Text Color</h4>
               </div>
             </div>
             <Card.Body>
@@ -220,7 +220,7 @@ const Colors = () => {
           <Card>
             <div className="card-header d-flex justify-content-between">
               <div className="header-title">
-                <h4 className="card-title">XRay Text Color</h4>
+                <h4 className="card-title">Medsky Text Color</h4>
               </div>
             </div>
             <Card.Body>
@@ -261,7 +261,7 @@ const Colors = () => {
           <Card>
             <div className="card-header d-flex justify-content-between">
               <div className="header-title">
-                <h4 className="card-title">XRay Text Color</h4>
+                <h4 className="card-title">Medsky Text Color</h4>
               </div>
             </div>
             <Card.Body>
