@@ -318,35 +318,35 @@ const DataTable = () => {
                                         <option
                                             id="english"
                                             value="eng"
-                                            data-path="../../assets/vendor/language/english.json"
+                                            data-path="/assets/vendor/language/english.json"
                                         >
                                             English
                                         </option>
                                         <option
                                             id="german"
                                             value="german"
-                                            data-path="../../assets/vendor/language/german.json"
+                                            data-path="/assets/vendor/language/german.json"
                                         >
                                             German
                                         </option>
                                         <option
                                             id="french"
                                             value="french"
-                                            data-path="../../assets/vendor/language/french.json"
+                                            data-path="/assets/vendor/language/french.json"
                                         >
                                             French
                                         </option>
                                         <option
                                             id="hindi"
                                             value="hindi"
-                                            data-path="../../assets/vendor/language/hindi.json"
+                                            data-path="/assets/vendor/language/hindi.json"
                                         >
                                             Hindi
                                         </option>
                                         <option
                                             id="japanase"
                                             value="japanase"
-                                            data-path="../../assets/vendor/language/japanese.json"
+                                            data-path="/assets/vendor/language/japanese.json"
                                         >
                                             Japanese
                                         </option>

@@ -100,12 +100,18 @@ import SignUp from "../views/auth/sign-up"
 import RecoverPassword from "../views/auth/recover-password"
 import LockScreen from "../views/auth/lock-screen"
 import { path } from "@amcharts/amcharts4/core"
+import GlobalType from "../views/masters/GlobalType/globalType"
 
 export const DefaultRoute = [
   {
     path: "",
     element: <DefaultLayout />,
     children: [
+      // ------ Masters ------
+      {
+        path: '/masters/globalType',
+        element: <GlobalType />
+      },
       //  ------ Dashboard Route ------ 
       {
         path: '/',

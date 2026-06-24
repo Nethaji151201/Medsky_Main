@@ -1,757 +1,917 @@
-import React, { useContext, useState } from "react"
-import { Accordion, AccordionContext, Collapse, Nav, OverlayTrigger, Tooltip, useAccordionButton } from "react-bootstrap"
-import { Link, useLocation } from "react-router-dom"
+import React, { useContext, useState } from "react";
+import { Accordion, AccordionContext, Nav, OverlayTrigger, Tooltip, useAccordionButton } from "react-bootstrap";
+import { Link, useLocation } from "react-router-dom";
 
+export const MenuListNew = [
+    {
+        isHeader: true,
+        title: 'Masters'
+    },
+    {
+        title: 'Global Type',
+        to: '/masters/globalType',
+        icon: 'ri-home-8-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        isHeader: true,
+        title: 'Dashboard'
+    },
+    {
+        title: 'Doctor Dashboard',
+        to: '/',
+        icon: 'ri-hospital-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        title: 'Hospital Dashboard 1',
+        to: '/dashboard-pages/dashboard-1',
+        icon: 'ri-home-8-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        title: 'Hospital Dashboard 2',
+        to: '/dashboard-pages/dashboard-2',
+        icon: 'ri-briefcase-4-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        title: 'Patient Dashboard',
+        to: '/dashboard-pages/patient-dashboard',
+        icon: 'ri-briefcase-4-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        title: 'Covid-19 Dashboard',
+        to: '/dashboard-pages/dashboard-4',
+        icon: 'ri-hospital-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        divider: true
+    },
+    {
+        isHeader: true,
+        title: 'Apps'
+    },
+    {
+        title: 'Email',
+        icon: 'ri-mail-open-fill',
+        content: [
+            {
+                title: 'Inbox',
+                to: '/email/inbox',
+                icon: 'ri-inbox-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Email Compose',
+                to: '/email/email-compose',
+                icon: 'ri-edit-2-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Doctor',
+        icon: 'doctor-svg',
+        content: [
+            {
+                title: 'All Doctor',
+                to: '/doctor/doctor-list',
+                icon: 'ri-file-list-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Add Doctor',
+                to: '/doctor/add-doctor',
+                icon: 'ri-user-add-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Doctor Profile',
+                to: '/doctor/doctor-profile',
+                icon: 'ri-profile-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Edit Doctor',
+                to: '/doctor/edit-doctor',
+                icon: 'ri-file-edit-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Calendar',
+        to: '/calendar',
+        icon: 'ri-calendar-2-line',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        title: 'Chat',
+        to: '/chat',
+        icon: 'ri-message-fill',
+        addPermission: true,
+        editPermission: true,
+        deletePermission: true,
+        viewPermission: true
+    },
+    {
+        divider: true
+    },
+    {
+        isHeader: true,
+        title: 'Components'
+    },
+    {
+        title: 'UI Elements',
+        icon: 'ri-apps-fill',
+        content: [
+            {
+                title: 'Colors',
+                to: '/ui-elements/colors',
+                icon: 'ri-font-color',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Typography',
+                to: '/ui-elements/typography',
+                icon: 'ri-text',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Alerts',
+                to: '/ui-elements/alerts',
+                icon: 'ri-alert-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Badges',
+                to: '/ui-elements/badges',
+                icon: 'ri-building-3-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Breadcrumb',
+                to: '/ui-elements/breadcrumb',
+                icon: 'ri-guide-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Buttons',
+                to: '/ui-elements/buttons',
+                icon: 'ri-checkbox-blank-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Cards',
+                to: '/ui-elements/cards',
+                icon: 'ri-bank-card-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Carousel',
+                to: '/ui-elements/carousel',
+                icon: 'ri-slideshow-4-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Video',
+                to: '/ui-elements/video',
+                icon: 'ri-movie-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Grid',
+                to: '/ui-elements/grid',
+                icon: 'ri-grid-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Images',
+                to: '/ui-elements/images',
+                icon: 'ri-image-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'List Group',
+                to: '/ui-elements/list-group',
+                icon: 'ri-file-list-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Modal',
+                to: '/ui-elements/modal',
+                icon: 'ri-checkbox-blank-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Notifications',
+                to: '/ui-elements/notifications',
+                icon: 'ri-notification-3-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Pagination',
+                to: '/ui-elements/pagination',
+                icon: 'ri-more-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Popovers',
+                to: '/ui-elements/popovers',
+                icon: 'ri-folder-shield-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Progressbars',
+                to: '/ui-elements/progressbars',
+                icon: 'ri-battery-low-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Tabs',
+                to: '/ui-elements/tabs',
+                icon: 'ri-database-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Tooltips',
+                to: '/ui-elements/tooltips',
+                icon: 'ri-record-mail-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Forms',
+        icon: 'ri-device-fill',
+        content: [
+            {
+                title: 'Form Elements',
+                to: '/forms/form-elements',
+                icon: 'ri-tablet-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Form Validation',
+                to: '/forms/form-validations',
+                icon: 'ri-device-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Form Switch',
+                to: '/forms/form-switch',
+                icon: 'ri-toggle-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Form Checkbox',
+                to: '/forms/form-checkbox',
+                icon: 'ri-chat-check-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Form Radio',
+                to: '/forms/form-radio',
+                icon: 'ri-radio-button-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Form Wizard',
+        icon: 'ri-file-word-fill',
+        content: [
+            {
+                title: 'Simple Wizard',
+                to: '/wizard/simple-wizard',
+                icon: 'ri-anticlockwise-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Validate Wizard',
+                to: '/wizard/validate-wizard',
+                icon: 'ri-anticlockwise-2-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Vertical Wizard',
+                to: '/wizard/vertical-wizard',
+                icon: 'ri-clockwise-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Table',
+        icon: 'ri-table-fill',
+        content: [
+            {
+                title: 'Basic Tables',
+                to: '/tables/basic-table',
+                icon: 'ri-table-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Data Tables',
+                to: '/tables/data-table',
+                icon: 'ri-table-2',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Editable Tables',
+                to: '/tables/editable-table',
+                icon: 'ri-archive-drawer-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Charts',
+        icon: 'ri-bar-chart-2-fill',
+        content: [
+            {
+                title: 'Chart Page',
+                to: '/charts/chart-page',
+                icon: 'ri-file-chart-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'ECharts',
+                to: '/charts/e-chart',
+                icon: 'ri-bar-chart-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Am Charts',
+                to: '/charts/chart-am',
+                icon: 'ri-bar-chart-box-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Apex Chart',
+                to: '/charts/apex-chart',
+                icon: 'ri-bar-chart-box-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Icons',
+        icon: 'ri-bar-chart-2-fill',
+        content: [
+            {
+                title: 'Dripicons',
+                to: '/icons/dripicons',
+                icon: 'ri-stack-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Font Awesome 5',
+                to: '/icons/fontawesome-5',
+                icon: 'ri-facebook-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Line Awesome',
+                to: '/icons/line-awesome',
+                icon: 'ri-keynote-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Remixicon',
+                to: '/icons/remixicon',
+                icon: 'ri-remixicon-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Unicons',
+                to: '/icons/unicons',
+                icon: 'ri-underline',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        divider: true
+    },
+    {
+        isHeader: true,
+        title: 'Pages'
+    },
+    {
+        title: 'Authentication',
+        icon: 'ri-server-fill',
+        content: [
+            {
+                title: 'Login',
+                to: '/auth/sign-in',
+                icon: 'ri-login-box-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Register',
+                to: '/auth/sign-up',
+                icon: 'ri-logout-box-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Recover Password',
+                to: '/auth/recover-password',
+                icon: 'ri-record-mail-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Confirm Mail',
+                to: '/auth/confirm-mail',
+                icon: 'ri-chat-check-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Lock Screen',
+                to: '/auth/lock-screen',
+                icon: 'ri-file-lock-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Maps',
+        icon: 'ri-map-pin-2-fill',
+        content: [
+            {
+                title: 'Google Map',
+                to: '/maps/google-map',
+                icon: 'ri-google-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        title: 'Extra Pages',
+        icon: 'ri-folders-fill',
+        content: [
+            {
+                title: 'Timeline',
+                to: '/extra-pages/pages-timeline',
+                icon: 'ri-map-pin-time-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Invoice',
+                to: '/extra-pages/pages-invoice',
+                icon: 'ri-question-answer-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Blank Page',
+                to: '/extra-pages/blank-page',
+                icon: 'ri-checkbox-blank-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Error 404',
+                to: '/extra-pages/pages-error-404',
+                icon: 'ri-error-warning-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Error 500',
+                to: '/extra-pages/pages-error-500',
+                icon: 'ri-error-warning-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Pricing',
+                to: '/extra-pages/pages-pricing',
+                icon: 'ri-price-tag-3-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Pricing 1',
+                to: '/extra-pages/pages-pricing-one',
+                icon: 'ri-price-tag-2-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Maintenance',
+                to: '/extra-pages/pages-maintenance',
+                icon: 'ri-git-repository-commits-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Coming Soon',
+                to: '/extra-pages/pages-comingsoon',
+                icon: 'ri-run-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Faq',
+                to: '/extra-pages/pages-faq',
+                icon: 'ri-compasses-2-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
+    },
+    {
+        divider: true
+    }
+];
 
+const renderIcon = (iconName) => {
+    if (iconName === "doctor-svg") {
+        return (
+            <i className="icon">
+                <svg
+                    className="icon-20"
+                    width="20"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path
+                        opacity="0.4"
+                        d="M12.0865 22C11.9627 22 11.8388 21.9716 11.7271 21.9137L8.12599 20.0496C7.10415 19.5201 6.30481 18.9259 5.68063 18.2336C4.31449 16.7195 3.5544 14.776 3.54232 12.7599L3.50004 6.12426C3.495 5.35842 3.98931 4.67103 4.72826 4.41215L11.3405 2.10679C11.7331 1.96656 12.1711 1.9646 12.5707 2.09992L19.2081 4.32684C19.9511 4.57493 20.4535 5.25742 20.4575 6.02228L20.4998 12.6628C20.5129 14.676 19.779 16.6274 18.434 18.1581C17.8168 18.8602 17.0245 19.4632 16.0128 20.0025L12.4439 21.9088C12.3331 21.9686 12.2103 21.999 12.0865 22Z"
+                        fill="currentColor"
+                    ></path>
+                    <path
+                        d="M11.3194 14.3209C11.1261 14.3219 10.9328 14.2523 10.7838 14.1091L8.86695 12.2656C8.57097 11.9793 8.56795 11.5145 8.86091 11.2262C9.15387 10.9369 9.63207 10.934 9.92906 11.2193L11.3083 12.5451L14.6758 9.22479C14.9698 8.93552 15.448 8.93258 15.744 9.21793C16.041 9.50426 16.044 9.97004 15.751 10.2574L11.8519 14.1022C11.7049 14.2474 11.5127 14.3199 11.3194 14.3209Z"
+                        fill="currentColor"
+                    ></path>
+                </svg>
+            </i>
+        );
+    }
+    return <i className={iconName}></i>;
+};
 
 const VerticalNav = () => {
-
-    const location = useLocation()
-    const [activeMenu, setActiveMenu] = useState(false)
-    const [active, setActive] = useState('')
-
-    const emailItems = [
-        { path: "/email/inbox", name: "Inbox", icon: "ri-inbox-fill" },
-        { path: "/email/email-compose", name: "Email Compose", icon: "ri-edit-2-fill" },
-    ];
-
-    const doctorItems = [
-        { path: "/doctor/doctor-list", name: "All Doctor", icon: "ri-file-list-fill" },
-        { path: "/doctor/add-doctor", name: "Add Doctor", icon: "ri-user-add-fill" },
-        { path: "/doctor/doctor-profile", name: "Doctor Profile", icon: "ri-profile-fill" },
-        { path: "/doctor/edit-doctor", name: "Edit Doctor", icon: "ri-file-edit-fill" },
-    ];
-
-    const uiElementsItems = [
-        { path: "/ui-elements/colors", name: "Colors", icon: "ri-font-color" },
-        { path: "/ui-elements/typography", name: "Typography", icon: "ri-text" },
-        { path: "/ui-elements/alerts", name: "Alerts", icon: "ri-alert-fill" },
-        { path: "/ui-elements/badges", name: "Badges", icon: "ri-building-3-fill" },
-        { path: "/ui-elements/breadcrumb", name: "Breadcrumb", icon: "ri-guide-fill" },
-        { path: "/ui-elements/buttons", name: "Buttons", icon: "ri-checkbox-blank-fill" },
-        { path: "/ui-elements/cards", name: "Cards", icon: "ri-bank-card-fill" },
-        { path: "/ui-elements/carousel", name: "Carousel", icon: "ri-slideshow-4-fill" },
-        { path: "/ui-elements/video", name: "Video", icon: "ri-movie-fill" },
-        { path: "/ui-elements/grid", name: "Grid", icon: "ri-grid-fill" },
-        { path: "/ui-elements/images", name: "Images", icon: "ri-image-fill" },
-        { path: "/ui-elements/list-group", name: "List Group", icon: "ri-file-list-fill" },
-        { path: "/ui-elements/modal", name: "Modal", icon: "ri-checkbox-blank-fill" },
-        { path: "/ui-elements/notifications", name: "Notifications", icon: "ri-notification-3-fill" },
-        { path: "/ui-elements/pagination", name: "Pagination", icon: "ri-more-fill" },
-        { path: "/ui-elements/popovers", name: "Popovers", icon: "ri-folder-shield-fill" },
-        { path: "/ui-elements/progressbars", name: "Progressbars", icon: "ri-battery-low-fill" },
-        { path: "/ui-elements/tabs", name: "Tabs", icon: "ri-database-fill" },
-        { path: "/ui-elements/tooltips", name: "Tooltips", icon: "ri-record-mail-fill" },
-    ];
-
-    const formItems = [
-        { path: "/forms/form-elements", name: "Form Elements", icon: "ri-tablet-fill" },
-        { path: "/forms/form-validations", name: "Form Validation", icon: "ri-device-fill" },
-        { path: "/forms/form-switch", name: "Form Switch", icon: "ri-toggle-fill" },
-        { path: "/forms/form-checkbox", name: "Form Checkbox", icon: "ri-chat-check-fill" },
-        { path: "/forms/form-radio", name: "Form Radio", icon: "ri-radio-button-fill" },
-    ];
-
-    const formWizardItems = [
-        { path: "/wizard/simple-wizard", name: "Simple Wizard", icon: "ri-anticlockwise-fill" },
-        { path: "/wizard/validate-wizard", name: "Validate Wizard", icon: "ri-anticlockwise-2-fill" },
-        { path: "/wizard/vertical-wizard", name: "Vertical Wizard", icon: "ri-clockwise-fill" },
-    ];
-
-    const tableItems = [
-        { path: "/tables/basic-table", name: "Basic Tables", icon: "ri-table-fill" },
-        { path: "/tables/data-table", name: "Data Tables", icon: "ri-table-2" },
-        { path: "/tables/editable-table", name: "Editable Tables", icon: "ri-archive-drawer-fill" },
-    ];
-
-
-    const chartItems = [
-        { path: "/charts/chart-page", name: "Chart Page", icon: "ri-file-chart-fill" },
-        { path: "/charts/e-chart", name: "ECharts", icon: "ri-bar-chart-fill" },
-        { path: "/charts/chart-am", name: "Am Charts", icon: "ri-bar-chart-box-fill" },
-        { path: "/charts/apex-chart", name: "Apex Chart", icon: "ri-bar-chart-box-fill" },
-    ];
-
-    const iconItems = [
-        { path: "/icons/dripicons", name: "Dripicons", icon: "ri-stack-fill" },
-        { path: "/icons/fontawesome-5", name: "Font Awesome 5", icon: "ri-facebook-fill" },
-        { path: "/icons/line-awesome", name: "Line Awesome", icon: "ri-keynote-fill" },
-        { path: "/icons/remixicon", name: "Remixicon", icon: "ri-remixicon-fill" },
-        { path: "/icons/unicons", name: "Unicons", icon: "ri-underline" },
-    ];
-
-    const authItems = [
-        { path: "/auth/sign-in", name: "Login", icon: "ri-login-box-fill" },
-        { path: "/auth/sign-up", name: "Register", icon: "ri-logout-box-fill" },
-        { path: "/auth/recover-password", name: "Recover Password", icon: "ri-record-mail-fill" },
-        { path: "/auth/confirm-mail", name: "Confirm Mail", icon: "ri-chat-check-fill" },
-        { path: "/auth/lock-screen", name: "Lock Screen", icon: "ri-file-lock-fill" },
-    ];
-
-    const extraPagesItems = [
-        { path: "/extra-pages/pages-timeline", name: "Timeline", icon: "ri-map-pin-time-fill" },
-        { path: "/extra-pages/pages-invoice", name: "Invoice", icon: "ri-question-answer-fill" },
-        { path: "/extra-pages/blank-page", name: "Blank Page", icon: "ri-checkbox-blank-fill" },
-        { path: "/extra-pages/pages-error-404", name: "Error 404", icon: "ri-error-warning-fill" },
-        { path: "/extra-pages/pages-error-500", name: "Error 500", icon: "ri-error-warning-fill" },
-        { path: "/extra-pages/pages-pricing", name: "Pricing", icon: "ri-price-tag-3-fill" },
-        { path: "/extra-pages/pages-pricing-one", name: "Pricing 1", icon: "ri-price-tag-2-fill" },
-        { path: "/extra-pages/pages-maintenance", name: "Maintenance", icon: "ri-git-repository-commits-fill" },
-        { path: "/extra-pages/pages-comingsoon", name: "Coming Soon", icon: "ri-run-fill" },
-        { path: "/extra-pages/pages-faq", name: "Faq", icon: "ri-compasses-2-fill" },
-    ];
+    const location = useLocation();
+    const [activeMenu, setActiveMenu] = useState(false);
+    const [active, setActive] = useState("");
 
     function CustomToggle({ children, eventKey, onClick, activeClass }) {
-
         const { activeEventKey } = useContext(AccordionContext);
-
-        const decoratedOnClick = useAccordionButton(eventKey, (active) => onClick({ state: !active, eventKey: eventKey }));
-
+        const decoratedOnClick = useAccordionButton(eventKey, (activeVal) =>
+            onClick({ state: !activeVal, eventKey: eventKey })
+        );
         const isCurrentEventKey = activeEventKey === eventKey;
 
         return (
-            <Link to="#" aria-expanded={isCurrentEventKey ? 'true' : 'false'} className={`nav-link ${activeEventKey === active || eventKey === active && 'active'} ${activeClass === true ? 'active' : ""}`} role="button" onClick={(e) => {
-                decoratedOnClick(isCurrentEventKey)
-            }}>
+            <Link
+                to="#"
+                aria-expanded={isCurrentEventKey ? "true" : "false"}
+                className={`nav-link ${activeEventKey === active || (eventKey === active && "active")} ${activeClass === true ? "active" : ""
+                    }`}
+                role="button"
+                onClick={(e) => {
+                    decoratedOnClick(isCurrentEventKey);
+                }}
+            >
                 {children}
             </Link>
         );
     }
 
-
     return (
         <>
             <ul className="navbar-nav iq-main-menu" id="sidebar-menu">
-                <Nav.Item as="li" className="static-item ms-2">
-                    <Link className="nav-link static-item disabled text-start" tabIndex="-1">
-                        <span className="default-icon">Dashboard</span>
-                        <OverlayTrigger
-                            key={"Home"}
-                            placement={"right"}
-                            overlay={
-                                <Tooltip id="Home">
-                                    Home
-                                </Tooltip>
-                            }
-                        >
-                            <span className="mini-icon">-</span>
-                        </OverlayTrigger>
-                    </Link>
-                </Nav.Item>
-                <Nav.Item as="li">
-                    <Link to="/" className={`nav-link ${location.pathname === "/" ? "active" : ""}`}>
-                        <OverlayTrigger
-                            key={"DDashboard"}
-                            placement={"right"}
-                            overlay={
-                                <Tooltip id="Dashboard">
-                                    Dashboard
-                                </Tooltip>
-                            }
-                        >
-                            <i className="ri-hospital-fill">
-                            </i>
-                        </OverlayTrigger>
-                        <span className="item-name">Doctor Dashboard</span>
-
-                    </Link>
-                </Nav.Item>
-                <Nav.Item as="li">
-                    <Link
-                        to="/dashboard-pages/dashboard-1" className={`nav-link ${location.pathname === "/dashboard-pages/dashboard-1" ? "active" : ""}`}>
-                        <OverlayTrigger
-                            key={"HDashboard"}
-                            placement={"right"}
-                            overlay={
-                                <Tooltip id="Dashboard">
-                                    Dashboard
-                                </Tooltip>
-                            }
-                        >
-                            <i className="ri-home-8-fill" data-bs-toggle="tooltip" title="Dashboard" data-bs-placement="right">
-                            </i>
-                        </OverlayTrigger>
-                        <span className="item-name ">Hospital Dashboard 1 </span>
-
-                    </Link>
-                </Nav.Item>
-                <Nav.Item as="li">
-                    <Link
-                        to="/dashboard-pages/dashboard-2" className={`nav-link ${location.pathname === "/dashboard-pages/dashboard-2" ? "active" : ""}`}>
-                        <OverlayTrigger
-                            key={"HDashboard2"}
-                            placement={"right"}
-                            overlay={
-                                <Tooltip id="Dashboard">
-                                    Dashboard
-                                </Tooltip>
-                            }
-                        >
-                            <i className="ri-briefcase-4-fill">
-                            </i>
-                        </OverlayTrigger>
-                        <span className="item-name ">Hospital Dashboard 2</span>
-                    </Link>
-                </Nav.Item>
-                <Nav.Item as="li">
-
-                    <Link
-                        to="/dashboard-pages/patient-dashboard" className={`nav-link ${location.pathname === "/dashboard-pages/patient-dashboard" ? "active" : ""}`}>
-                        <OverlayTrigger
-                            key={"PDashboard"}
-                            placement={"right"}
-                            overlay={
-                                <Tooltip id="Dashboard">
-                                    Dashboard
-                                </Tooltip>
-                            }
-                        >
-                            <i className="ri-briefcase-4-fill">
-                            </i>
-                        </OverlayTrigger>
-                        <span className="item-name ">Patient Dashboard</span>
-                    </Link>
-                </Nav.Item>
-                <Nav.Item as="li">
-                    <Link
-                        to="/dashboard-pages/dashboard-4" className={`nav-link  ${location.pathname === "/dashboard-pages/dashboard-4" ? "active" : ""}`}>
-                        <OverlayTrigger
-                            key={"CDashboard"}
-                            placement={"right"}
-                            overlay={
-                                <Tooltip id="Dashboard">
-                                    Dashboard
-                                </Tooltip>
-                            }
-                        >
-                            <i className="ri-hospital-fill">
-                            </i>
-                        </OverlayTrigger>
-                        <span className="item-name ">Covid-19 Dashboard</span>
-                    </Link>
-                </Nav.Item>
-                <li>
-                    <hr className="hr-horizontal" />
-                </li>
                 <Accordion bsPrefix="bg-none" onSelect={(e) => setActiveMenu(e)}>
-                    <Nav.Item as="li" className="static-item ms-2">
-                        <Nav.Link className="static-item disabled text-start" tabIndex="-1">
-                            <span className="default-icon">Apps</span>
-                            <span className="mini-icon">-</span>
-                        </Nav.Link>
-                    </Nav.Item>
-                    <Accordion.Item as="li" className={`nav-item ${active === "Email" && 'active'} ${location.pathname === "/email/inbox" || location.pathname === "/email /compose" ? "active" : ""}`} onClick={() => setActive("Email")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Email"
-                                activeClass={emailItems.some(item => location.pathname === item.path)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Email"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Email">
-                                            Email
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-mail-open-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Email</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="Email" as="ul" className="sub-nav" id="Email">
-                                <>
-                                    {emailItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={`icon ${icon}`}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-                        </div>
-
-                    </Accordion.Item>
-
-                    <Accordion.Item as="li" className={`nav-item ${active === "Doctor" && 'active'}`} onClick={() => setActive("Doctor")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Doctor"
-                                activeClass={doctorItems.some(item => location.pathname === item.path)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Doctor"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Doctor">
-                                            Doctor
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="icon">
-                                        <svg className="icon-20" width="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path opacity="0.4" d="M12.0865 22C11.9627 22 11.8388 21.9716 11.7271 21.9137L8.12599 20.0496C7.10415 19.5201 6.30481 18.9259 5.68063 18.2336C4.31449 16.7195 3.5544 14.776 3.54232 12.7599L3.50004 6.12426C3.495 5.35842 3.98931 4.67103 4.72826 4.41215L11.3405 2.10679C11.7331 1.96656 12.1711 1.9646 12.5707 2.09992L19.2081 4.32684C19.9511 4.57493 20.4535 5.25742 20.4575 6.02228L20.4998 12.6628C20.5129 14.676 19.779 16.6274 18.434 18.1581C17.8168 18.8602 17.0245 19.4632 16.0128 20.0025L12.4439 21.9088C12.3331 21.9686 12.2103 21.999 12.0865 22Z" fill="currentColor"></path>
-                                            <path d="M11.3194 14.3209C11.1261 14.3219 10.9328 14.2523 10.7838 14.1091L8.86695 12.2656C8.57097 11.9793 8.56795 11.5145 8.86091 11.2262C9.15387 10.9369 9.63207 10.934 9.92906 11.2193L11.3083 12.5451L14.6758 9.22479C14.9698 8.93552 15.448 8.93258 15.744 9.21793C16.041 9.50426 16.044 9.97004 15.751 10.2574L11.8519 14.1022C11.7049 14.2474 11.5127 14.3199 11.3194 14.3209Z" fill="currentColor"></path>
-                                        </svg>
-                                    </i>
-                                </OverlayTrigger>
-                                <span className="item-name">Doctor</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse as="ul" eventKey="Doctor" className="sub-nav" id="Doctor">
-                                <>
-                                    {doctorItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-
-
-                        </div>
-                    </Accordion.Item>
-
-                    <Nav.Item as="li">
-                        <Link className={`nav-link ${location.pathname === "/calendar" ? "active" : ""}`} to="/calendar">
-                            <OverlayTrigger
-                                key={"Calendar"}
-                                placement={"right"}
-                                overlay={
-                                    <Tooltip id="Calendar">
-                                        Calendar
-                                    </Tooltip>
-                                }
-                            >
-                                <i className="ri-calendar-2-line">
-                                </i>
-                            </OverlayTrigger>
-                            <span className="item-name ">Calendar</span>
-
-                        </Link>
-                    </Nav.Item>
-
-                    <Nav.Item as="li">
-                        <Link className={`nav-link ${location.pathname === "/chat" ? "active" : ""}`} to="/chat">
-                            <OverlayTrigger
-                                key={"Chat"}
-                                placement={"right"}
-                                overlay={
-                                    <Tooltip id="Chat">
-                                        Chat
-                                    </Tooltip>
-                                }
-                            >
-                                <i className="ri-message-fill">
-                                </i>
-                            </OverlayTrigger>
-                            <span className="item-name ">Chat</span>
-
-                        </Link>
-                    </Nav.Item>
-
-                    <Nav.Item as="li" className="static-item ms-2">
-                        <Nav.Link className="static-item disabled text-start" tabIndex="-1">
-                            <span className="default-icon">Components</span>
-                            <span className="mini-icon">-</span>
-                        </Nav.Link>
-                    </Nav.Item>
-                    <Accordion.Item as="li" bsPrefix={`nav-item ${active === "UIElements" && 'active'}`} onClick={() => setActive("UIElements")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="UIElements"
-                                activeClass={uiElementsItems.some(item => location.pathname === item.path)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"UIElements"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="UIElements">
-                                            UIElements
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-apps-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">UI Elements</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="UIElements" as="ul" className="sub-nav" id="UIElements">
-                                <>
-                                    {uiElementsItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-
-                        </div>
-                    </Accordion.Item>
-                    <Accordion.Item as="li" bsPrefix={`nav-item ${active === "Forms" && 'active'}`} onClick={() => setActive("Forms")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Forms"
-                                activeClass={formItems.some(item => location.pathname === item.path)} // Check if any item path matches
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Forms"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Forms">
-                                            Forms
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-device-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Forms</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse as="ul" className="sub-nav" eventKey="Forms" id="Forms">
-                                <>
-                                    {formItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-
-                        </div>
-                    </Accordion.Item>
-                    <Accordion.Item as="li" className={`nav-item ${active === "Form-Wizard" && 'active'}`} onClick={() => setActive("Form-Wizard")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Form-Wizard"
-                                activeClass={formWizardItems.some(item => item.path === location.pathname)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Forms-Wizard"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Forms-Wizard">
-                                            Forms Wizard
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-file-word-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Form Wizard</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="Form-Wizard" as="ul" className="sub-nav" id="Form-Wizard">
-                                <>
-                                    {formWizardItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-                        </div>
-                    </Accordion.Item>
-                    <Accordion.Item as="li" className={`nav-item ${active === "table" && 'active'}`} onClick={() => setActive("table")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="table"
-                                activeClass={tableItems.some(item => item.path === location.pathname)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Table"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Table">
-                                            Table
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-table-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Table</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="table" as="ul" className="sub-nav" id="table">
-                                <>
-                                    {tableItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-                        </div>
-                    </Accordion.Item>
-
-                    <Accordion.Item as="li" className={`nav-item ${active === "Chart" && 'active'}`} onClick={() => setActive("Chart")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Chart"
-                                activeClass={chartItems.some(item => item.path === location.pathname)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Chart"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Chart">
-                                            Chart
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-bar-chart-2-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Charts</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="Chart" as="ul" className="sub-nav" id="Chart">
-                                <>
-                                    {chartItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-
-                        </div>
-                    </Accordion.Item>
-
-                    <Accordion.Item as="li" className={`nav-item ${active === "Icons" && 'active'}`} onClick={() => setActive("Icons")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Icons"
-                                activeClass={iconItems.some(item => item.path === location.pathname)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Icons"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Icons">
-                                            Icons
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-bar-chart-2-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Icons</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="Icons" as="ul" className="sub-nav" id="Icons">
-                                <>
-                                    {iconItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-                        </div>
-                    </Accordion.Item>
-
-                    <Nav.Item as="li" className="static-item ms-2">
-                        <Nav.Link className="static-item disabled text-start" tabIndex="-1">
-                            <span className="default-icon ">Pages</span>
-                            <span className="mini-icon">-</span>
-                        </Nav.Link>
-                    </Nav.Item>
-                    <Accordion.Item as="li" eventKey="Authentication" className={`nav-item ${active === "Authentication" && "active"}`} onClick={() => setActive("Authentication")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Authentication"
-                                activeClass={authItems.some(item => item.path === location.pathname)}
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Authentication"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Authentication">
-                                            Authentication
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-server-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Authentication</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse eventKey="Authentication" as="ul" className="sub-nav" id="Authentication">
-                                <>
-                                    {authItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-
-                        </div>
-                    </Accordion.Item>
-
-                    <Accordion.Item as="li" eventKey="Maps" id="Maps" className={`nav-item ${active === "Maps" && 'active'}`} onClick={() => setActive("Maps")}>
-                        <div className="colors">
-                            <CustomToggle eventKey="Maps" onClick={(activeKey) => setActiveMenu(activeKey)}>
-                                <OverlayTrigger
-                                    key={"Maps"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Maps">
-                                            Maps
-                                        </Tooltip>
-                                    }
-                                >
-                                    <i className="ri-map-pin-2-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Maps</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
-
-                            <Accordion.Collapse as="ul" eventKey="Maps" className="sub-nav" id="Maps">
-                                <li>
-                                    <Link className={`nav-link ${location.pathname === "/maps/google-map" ? "active" : ""}`}
-                                        to="/maps/google-map">
-                                        <i className="ri-google-fill"></i>
-                                        <span className="item-name">Google Map</span>
-                                    </Link>
+                    {MenuListNew.map((item, index) => {
+                        if (item.divider) {
+                            return (
+                                <li key={`divider-${index}`}>
+                                    <hr className="hr-horizontal" />
                                 </li>
-                            </Accordion.Collapse>
+                            );
+                        }
 
-                        </div>
+                        if (item.isHeader) {
+                            return (
+                                <Nav.Item as="li" className="static-item ms-2" key={`header-${index}`}>
+                                    <Link
+                                        className="nav-link static-item disabled text-start"
+                                        tabIndex="-1"
+                                        to="#"
+                                    >
+                                        <span className="default-icon">{item.title}</span>
+                                        <OverlayTrigger
+                                            key={item.title}
+                                            placement="right"
+                                            overlay={
+                                                <Tooltip id={`tooltip-header-${index}`}>{item.title}</Tooltip>
+                                            }
+                                        >
+                                            <span className="mini-icon">-</span>
+                                        </OverlayTrigger>
+                                    </Link>
+                                </Nav.Item>
+                            );
+                        }
 
-                    </Accordion.Item>
-                    <Accordion.Item as="li" eventKey="0" id="Extrapages" className={`nav-item ${active === "Extrapages" && 'active'}`} onClick={() => setActive("Extrapages")}>
-                        <div className="colors">
-                            <CustomToggle
-                                eventKey="Extrapages"
-                                onClick={(activeKey) => setActiveMenu(activeKey)}
-                            >
-                                <OverlayTrigger
-                                    key={"Extrapages"}
-                                    placement={"right"}
-                                    overlay={
-                                        <Tooltip id="Extrapages">
-                                            Extrapages
-                                        </Tooltip>
-                                    }
+                        const hasContent = item.content && item.content.length > 0;
+
+                        if (hasContent) {
+                            const isSubActive = item.content.some((sub) => location.pathname === sub.to);
+                            return (
+                                <Accordion.Item
+                                    as="li"
+                                    key={index}
+                                    className={`nav-item ${active === item.title || isSubActive ? "active" : ""}`}
+                                    onClick={() => setActive(item.title)}
                                 >
-                                    <i className="ri-folders-fill"></i>
-                                </OverlayTrigger>
-                                <span className="item-name">Extra Pages</span>
-                                <i className="right-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" className="icon-18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                                    </svg>
-                                </i>
-                            </CustomToggle>
+                                    <div className="colors">
+                                        <CustomToggle
+                                            eventKey={item.title}
+                                            activeClass={isSubActive}
+                                            onClick={(activeKey) => setActiveMenu(activeKey)}
+                                        >
+                                            <OverlayTrigger
+                                                key={item.title}
+                                                placement="right"
+                                                overlay={
+                                                    <Tooltip id={`tooltip-${index}`}>{item.title}</Tooltip>
+                                                }
+                                            >
+                                                {renderIcon(item.icon)}
+                                            </OverlayTrigger>
+                                            <span className="item-name">{item.title}</span>
+                                            <i className="right-icon">
+                                                <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    width="18"
+                                                    className="icon-18"
+                                                    fill="none"
+                                                    viewBox="0 0 24 24"
+                                                    stroke="currentColor"
+                                                >
+                                                    <path
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
+                                                        d="M9 5l7 7-7 7"
+                                                    />
+                                                </svg>
+                                            </i>
+                                        </CustomToggle>
 
-                            <Accordion.Collapse eventKey="Extrapages" as="ul" className="sub-nav" id="Extrapages">
-                                <>
-                                    {extraPagesItems.map(({ path, name, icon }) => (
-                                        <li key={path}>
-                                            <Link className={`nav-link ${location.pathname === path ? "active" : ""}`} to={path}>
-                                                <i className={icon}></i>
-                                                <span className="item-name">{name}</span>
-                                            </Link>
-                                        </li>
-                                    ))}
-                                </>
-                            </Accordion.Collapse>
-                        </div>
-                    </Accordion.Item>
+                                        <Accordion.Collapse
+                                            eventKey={item.title}
+                                            as="ul"
+                                            className="sub-nav"
+                                            id={item.title}
+                                        >
+                                            <>
+                                                {item.content.map((subItem, subIndex) => (
+                                                    <li key={subIndex}>
+                                                        <Link
+                                                            className={`nav-link ${location.pathname === subItem.to ? "active" : ""
+                                                                }`}
+                                                            to={subItem.to}
+                                                        >
+                                                            <i className={subItem.icon}></i>
+                                                            <span className="item-name">{subItem.title}</span>
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </>
+                                        </Accordion.Collapse>
+                                    </div>
+                                </Accordion.Item>
+                            );
+                        } else {
+                            const isActive = location.pathname === item.to;
+                            return (
+                                <Nav.Item as="li" key={index} className={`${isActive ? "active" : ""}`}>
+                                    <Link
+                                        to={item.to}
+                                        className={`nav-link ${isActive ? "active" : ""}`}
+                                    >
+                                        <OverlayTrigger
+                                            key={item.title}
+                                            placement="right"
+                                            overlay={
+                                                <Tooltip id={`tooltip-${index}`}>{item.title}</Tooltip>
+                                            }
+                                        >
+                                            {renderIcon(item.icon)}
+                                        </OverlayTrigger>
+                                        <span className="item-name">{item.title}</span>
+                                    </Link>
+                                </Nav.Item>
+                            );
+                        }
+                    })}
                 </Accordion>
-
-                <li>
-                    <hr className="hr-horizontal" />
-                </li>
             </ul>
-
         </>
-    )
-}
+    );
+};
 
-export default VerticalNav
+export default VerticalNav;
