@@ -83,7 +83,7 @@
 
             .dataTables_filter,
             .dataTables_paginate {
-                padding-right: $spacer * 1.5;
+                padding-right: $spacer * 0;
             }
 
             .dataTables_info {
@@ -112,13 +112,13 @@ th {
 
 #appointment-table-tab {
     .nav-link {
-        background-color: rgba(222,226,230,.1);
+        background-color: rgba(222, 226, 230, .1);
         border-width: 1px;
         border-style: solid;
         border-color: var(--bs-border-color);
         color: var(--#{$prefix}body-color);
 
-        &.active{
+        &.active {
             color: var(--bs-white);
             background-color: var(--bs-primary);
             border-color: var(--bs-primary);

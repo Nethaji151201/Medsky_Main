@@ -1,7 +1,34 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import $ from "jquery";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 import "datatables.net-bs5";
+
+// Helper to serialize columns including render functions to prevent unnecessary re-initializations
+const serializeColumns = (cols) => {
+  if (!cols) return "";
+  try {
+    return JSON.stringify(cols, (key, value) => {
+      if (typeof value === "function") {
+        return value.toString();
+      }
+      return value;
+    });
+  } catch (e) {
+    return "";
+  }
+};
+
+// Helper to reorder an array
+const reorderArray = (arr, from, to) => {
+  const result = [...arr];
+  const [removed] = result.splice(from, 1);
+  let target = to;
+  if (from < to) {
+    target = to - 1;
+  }
+  result.splice(target, 0, removed);
+  return result;
+};
 
 const useDataTableMS = ({
   tableRef,
@@ -15,9 +42,151 @@ const useDataTableMS = ({
   isFooter = false,
   isMultilang = false,
   bordered = false, // Dynamic and optional border parameter
+
+  // Selection & Row interaction
+  isLoading = false,
+  emptyMessage = "No data found",
+  onRowClick,
+  selectable = false,
+  onSelectionChange,
+  zebra = true, // ON by default — odd rows gray, even rows white
+
+  // Infinite Scroll
+  enableInfiniteScroll = false,
+  apiFunction,
+  pageSize = 50,
+  scrollHeight = null,
+  onLoadMore,
 }) => {
+  // 1. Keep orderedColumns state to manage native HTML5 drag and drop reordering
+  const [orderedColumns, setOrderedColumns] = useState(columns);
+  const serializedParentColumns = serializeColumns(columns);
+
+  // Sync state if parent columns prop changes
   useEffect(() => {
-    // 1. Inject resizer, border, and export alignment styles programmatically (completely scoped to .dt-ms-table and .dt-ms-instance)
+    setOrderedColumns(columns);
+  }, [serializedParentColumns]);
+
+  // 2. Ref-wrap volatile callbacks to prevent React state re-render cycles from destroying the table
+  const onSelectionChangeRef = useRef(onSelectionChange);
+  const onRowClickRef = useRef(onRowClick);
+  const onLoadMoreRef = useRef(onLoadMore);
+  const apiFunctionRef = useRef(apiFunction);
+  const actionCallbackRef = useRef(actionCallback);
+
+  useEffect(() => { onSelectionChangeRef.current = onSelectionChange; }, [onSelectionChange]);
+  useEffect(() => { onRowClickRef.current = onRowClick; }, [onRowClick]);
+  useEffect(() => { onLoadMoreRef.current = onLoadMore; }, [onLoadMore]);
+  useEffect(() => { apiFunctionRef.current = apiFunction; }, [apiFunction]);
+  useEffect(() => { actionCallbackRef.current = actionCallback; }, [actionCallback]);
+
+  // 3. Infinite Scroll State
+  const isServerInfinite = enableInfiniteScroll && typeof apiFunction === "function";
+  const [internalData, setInternalData] = useState([]);
+  const [internalLoading, setInternalLoading] = useState(false);
+
+  const displayData = isServerInfinite ? internalData : data;
+  const displayLoading = isServerInfinite ? internalLoading : isLoading;
+
+  // Refs for Infinite Scroll control
+  const pageRef = useRef(1);
+  const searchRef = useRef("");
+  const hasMoreRef = useRef(true);
+  const isFetchingRef = useRef(false);
+  const searchDebounceTimeoutRef = useRef(null);
+
+  // 4. Selection State preservation
+  const selectedRowIdsRef = useRef(new Set());
+
+  // Helper to get unique row ID
+  const getRowId = (row) => {
+    if (!row) return "";
+    if (typeof row === "string" || typeof row === "number") return row.toString();
+    const idFields = ["id", "_id", "globalTypeId", "code", "globalTypeName"];
+    for (const field of idFields) {
+      if (row[field] !== undefined && row[field] !== null) {
+        return row[field].toString();
+      }
+    }
+    return JSON.stringify(row);
+  };
+
+  // Fetch more data for server-side infinite scroll
+  const fetchMoreData = async (isReset = false) => {
+    if (!isServerInfinite || isFetchingRef.current) return;
+    if (!isReset && !hasMoreRef.current) return;
+
+    isFetchingRef.current = true;
+    setInternalLoading(true);
+
+    const currentPage = isReset ? 1 : pageRef.current;
+    const currentSearch = searchRef.current;
+
+    try {
+      const response = await apiFunctionRef.current({
+        page: currentPage,
+        pageSize: pageSize,
+        search: currentSearch,
+      });
+
+      let newItems = [];
+      let total = null;
+
+      if (Array.isArray(response)) {
+        newItems = response;
+      } else if (response && Array.isArray(response.data)) {
+        newItems = response.data;
+        total = response.total;
+      } else if (response && Array.isArray(response.records)) {
+        newItems = response.records;
+        total = response.totalRecords;
+      }
+
+      setInternalData((prev) => {
+        const updated = isReset ? newItems : [...prev, ...newItems];
+        if (total !== null && total !== undefined) {
+          hasMoreRef.current = updated.length < total;
+        } else {
+          hasMoreRef.current = newItems.length >= pageSize;
+        }
+        return updated;
+      });
+
+      pageRef.current = currentPage + 1;
+    } catch (error) {
+      console.error("Error fetching infinite scroll data:", error);
+    } finally {
+      isFetchingRef.current = false;
+      setInternalLoading(false);
+    }
+  };
+
+  const fetchMoreDataRef = useRef(null);
+  fetchMoreDataRef.current = fetchMoreData;
+
+  // Fetch initial page when apiFunction is provided
+  useEffect(() => {
+    if (isServerInfinite) {
+      pageRef.current = 1;
+      hasMoreRef.current = true;
+      setInternalData([]);
+      fetchMoreData(true);
+    }
+  }, [isServerInfinite, apiFunction, pageSize]);
+
+  // Clean up search debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (searchDebounceTimeoutRef.current) {
+        clearTimeout(searchDebounceTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  const serializedColumns = serializeColumns(orderedColumns);
+
+  useEffect(() => {
+    // 1. Inject styles programmatically (completely scoped to .dt-ms-table and .dt-ms-instance)
     if (!document.getElementById("dt-col-resizer-style")) {
       const style = document.createElement("style");
       style.id = "dt-col-resizer-style";
@@ -109,12 +278,112 @@ const useDataTableMS = ({
           width: 100% !important;
         }
 
+        /* Scoped Zebra Striping */
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd td {
+          background-color: #ffffff !important;
+          box-shadow: none !important;
+        }
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even td {
+          background-color: #f8f9fa !important;
+          box-shadow: none !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd td {
+          background-color: #11141c !important;
+          box-shadow: none !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even td {
+          background-color: #161a23 !important;
+          box-shadow: none !important;
+        }
+
+        /* Scoped Row Selection highlighting (ensures override of zebra stripe backgrounds) */
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.selected td,
+        table.dataTable.dt-ms-table tbody tr.selected td {
+          background-color: rgba(63, 70, 250, 0.12) !important;
+          box-shadow: none !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.selected td,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr.selected td {
+          background-color: rgba(63, 70, 250, 0.25) !important;
+          box-shadow: none !important;
+        }
+
+        /* Scoped Drag and Drop Column Reordering styles (AG Grid style) */
+        .dt-reorder-ghost {
+          background-color: #ffffff !important;
+          border: 1px solid #dee2e6 !important;
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+          border-radius: 6px !important;
+          padding: 6px 12px !important;
+          opacity: 0.95 !important;
+          pointer-events: none !important;
+          z-index: 9999 !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 8px !important;
+          font-weight: 500 !important;
+          font-size: 13px !important;
+          color: #212529 !important;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        }
+        [data-bs-theme="dark"] .dt-reorder-ghost {
+          background-color: #1a1e29 !important;
+          border-color: #2d3748 !important;
+          color: #f8f9fa !important;
+        }
+        .dt-reorder-icon {
+          color: #6c757d !important;
+          font-weight: bold !important;
+          font-size: 14px !important;
+        }
+        .dt-reorder-line {
+          width: 2px !important;
+          background-color: #3f46fa !important;
+          z-index: 9998 !important;
+          pointer-events: none !important;
+        }
+        table.dataTable.dt-ms-table thead th.dt-dragging-original {
+          opacity: 0.4 !important;
+          background-color: rgba(63, 70, 250, 0.05) !important;
+        }
+
+        /* Custom empty message styling */
+        table.dataTable.dt-ms-table td.dataTables_empty {
+          text-align: center !important;
+          padding: 40px 20px !important;
+          color: #6c757d !important;
+          font-size: 14px !important;
+          background-color: transparent !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table td.dataTables_empty {
+          color: #a0aec0 !important;
+        }
+
+        /* Premium loading overlay styling */
+        .dt-ms-instance .dt-loading-overlay {
+          background-color: rgba(255, 255, 255, 0.7) !important;
+          backdrop-filter: blur(1px) !important;
+          z-index: 1050 !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .dt-loading-overlay {
+          background-color: rgba(21, 25, 34, 0.7) !important;
+        }
+
+        /* Infinite scroll bottom loader */
+        .dt-ms-instance .dt-infinite-loading-spinner {
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          padding: 10px 0 !important;
+          background: transparent !important;
+        }
+
         /* Scoped Export and Pagination Alignment: Pushed to the far right (end) */
         .dt-ms-instance .row > div:has(.dataTables_filter),
         .dt-ms-instance .row > div:has(.dataTables_paginate) {
           display: flex !important;
           justify-content: flex-end !important;
-          align-items: center !important;
+          align-items: center;
         }
         .dt-ms-instance .dataTables_filter {
           display: inline-flex !important;
@@ -160,12 +429,34 @@ const useDataTableMS = ({
       document.head.appendChild(style);
     }
 
-    setTimeout(() => {
+    const timer = setTimeout(() => {
+      // Prepend dynamic Row Selection checkbox column if selectable is true
+      let finalColumns = [...orderedColumns];
+      if (selectable) {
+        finalColumns.unshift({
+          data: null,
+          defaultContent: "",
+          orderable: false,
+          className: "dt-select-cell text-center",
+          width: "40px",
+          title: `<input class="form-check-input dt-select-all" type="checkbox" style="cursor: pointer; width: 16px; height: 16px;">`,
+          render: function () {
+            return `<input class="form-check-input dt-row-select" type="checkbox" style="cursor: pointer; width: 16px; height: 16px;">`;
+          },
+        });
+      }
+
       let datatableObj = {
-        dom: '<"row align-items-center"<"col-md-6" l><"col-md-6" f>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">',
+        dom: enableInfiniteScroll
+          ? '<"row align-items-center"<"col-md-6" f>><"table-responsive" rt><"clear">'
+          : '<"row align-items-center"<"col-md-6" l><"col-md-6" f>><"table-responsive" rt><"row align-items-center" <"col-md-6" i><"col-md-6" p>><"clear">',
         autoWidth: false,
-        columns: columns,
+        columns: finalColumns,
         destroy: true,
+        language: {
+          zeroRecords: emptyMessage,
+          emptyTable: emptyMessage,
+        },
       };
 
       if (url) {
@@ -179,10 +470,11 @@ const useDataTableMS = ({
         };
       }
 
-      if (data) {
+      // Initialize with displayData
+      if (displayData) {
         datatableObj = {
           ...datatableObj,
-          data: data,
+          data: displayData,
         };
       }
 
@@ -191,9 +483,13 @@ const useDataTableMS = ({
           ...datatableObj,
           initComplete: function () {
             const footerRow = document.createElement("tr");
-            columns.forEach((column) => {
+            finalColumns.forEach((column) => {
               const footerCell = document.createElement("th");
-              footerCell.append(column.title);
+              if (column.className && column.className.includes("dt-select-cell")) {
+                footerCell.innerHTML = "";
+              } else {
+                footerCell.append(column.title);
+              }
               footerRow.append(footerCell);
             });
 
@@ -207,14 +503,18 @@ const useDataTableMS = ({
           initComplete: function () {
             const footerRow = document.createElement("tr");
             const table = $(tableRef.current).DataTable();
-            columns.forEach((column) => {
+            finalColumns.forEach((column) => {
               const footerCell = document.createElement("td");
+              if (column.className && column.className.includes("dt-select-cell")) {
+                footerRow.append(footerCell);
+                return;
+              }
               const input = document.createElement("input");
               input.type = "text";
               input.className = "form-control form-control-sm";
               input.placeholder = column.title;
               input.addEventListener("keyup", (event) => {
-                const columnIndex = columns.findIndex(
+                const columnIndex = finalColumns.findIndex(
                   (c) => c.title === column.title
                 );
                 table.columns(columnIndex).search(event.target.value).draw();
@@ -240,6 +540,7 @@ const useDataTableMS = ({
         datatableObj = {
           ...datatableObj,
           language: {
+            ...datatableObj.language,
             url: languageSelect(),
           },
         };
@@ -248,11 +549,23 @@ const useDataTableMS = ({
         setMultiLang();
       }
 
+      if (enableInfiniteScroll) {
+        datatableObj = {
+          ...datatableObj,
+          scrollY: scrollHeight || "400px",
+          paging: false,
+          scrollCollapse: true,
+        };
+      }
+
       // Initialize DataTable
       const $table = $(tableRef.current);
       $table.addClass("dt-ms-table");
       if (bordered) {
         $table.addClass("dt-bordered-grid");
+      }
+      if (zebra) {
+        $table.addClass("dt-zebra-stripes");
       }
 
       let datatable = $table.DataTable(datatableObj);
@@ -278,8 +591,13 @@ const useDataTableMS = ({
             });
           }
 
-          // Only add resizer if it doesn't exist yet and it's not a helper/empty column
-          if (!$th.find(".dt-resizer").length && $th.text() !== "Action" && $th.text() !== "") {
+          // Only add resizer if it doesn't exist yet and it's not a helper/empty column or select cell
+          if (
+            !$th.find(".dt-resizer").length &&
+            !$th.find(".dt-select-all").length &&
+            $th.text() !== "Action" &&
+            $th.text() !== ""
+          ) {
             const $resizer = $('<div class="dt-resizer"></div>');
             $th.css("position", "relative");
             $th.append($resizer);
@@ -328,14 +646,198 @@ const useDataTableMS = ({
         });
       };
 
-      enableColumnResizing();
+      // 3. Implement AG-Grid-style Column Reordering with a Custom Ghost Helper and full vertical Insertion Line
+      const enableDragAndDropReordering = () => {
+        const $headers = $table.find("thead th");
 
-      // Re-apply resizers and enforce locked widths when columns are drawn (e.g. pagination, sorting)
+        $headers.each(function (index) {
+          const $th = $(this);
+
+          // Skip selection checkbox column
+          if (selectable && index === 0) return;
+          if ($th.text() === "Action" || $th.text() === "") return;
+
+          $th.css("cursor", "grab");
+
+          $th.off("mousedown.dtDrag").on("mousedown.dtDrag", function (downEvent) {
+            // Ignore if clicking on resizer handle, input, checkbox, or buttons
+            if ($(downEvent.target).closest(".dt-resizer, input, checkbox, .btn, .dropdown").length) {
+              return;
+            }
+
+            downEvent.preventDefault();
+
+            const startX = downEvent.pageX;
+            const startY = downEvent.pageY;
+            let isDragging = false;
+            let $ghost = null;
+            let $line = null;
+            let lastInsertIdx = -1;
+
+            $(document).on("mousemove.dtDrag", function (moveEvent) {
+              const deltaX = moveEvent.pageX - startX;
+              const deltaY = moveEvent.pageY - startY;
+
+              // Start drag only after moving past threshold (5px)
+              if (!isDragging && (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5)) {
+                isDragging = true;
+                $th.addClass("dt-dragging-original");
+
+                // Create AG-Grid style ghost helper
+                $ghost = $('<div class="dt-reorder-ghost"></div>');
+                $ghost.html(`<span class="dt-reorder-icon">✥</span> <span class="dt-reorder-title">${$th.text().trim()}</span>`);
+                $("body").append($ghost);
+
+                // Create vertical insertion line indicator
+                $line = $('<div class="dt-reorder-line"></div>');
+                $("body").append($line);
+              }
+
+              if (isDragging) {
+                // Track mouse cursor with ghost helper
+                $ghost.css({
+                  left: (moveEvent.pageX + 12) + "px",
+                  top: (moveEvent.pageY + 12) + "px",
+                  position: "absolute"
+                });
+
+                // Find which column header the mouse is over
+                let targetIdx = -1;
+                let insertIdx = -1;
+                let targetRect = null;
+                let isLeftHalf = true;
+
+                $headers.each(function (idx) {
+                  const rect = this.getBoundingClientRect();
+                  const pageLeft = rect.left + window.scrollX;
+                  const pageRight = rect.right + window.scrollX;
+
+                  if (moveEvent.pageX >= pageLeft && moveEvent.pageX <= pageRight) {
+                    targetIdx = idx;
+                    targetRect = rect;
+                    isLeftHalf = moveEvent.pageX < (pageLeft + rect.width / 2);
+                    insertIdx = isLeftHalf ? idx : idx + 1;
+                    return false; // Break loop
+                  }
+                });
+
+                // Enforce boundary constraints (don't move checkbox or move columns before it)
+                if (selectable && (insertIdx <= 1 || targetIdx === 0)) {
+                  $line.css("display", "none");
+                  lastInsertIdx = -1;
+                  return;
+                }
+
+                if (targetIdx !== -1 && targetRect) {
+                  // Position vertical blue insertion line running down the entire table
+                  const lineX = isLeftHalf ? targetRect.left : targetRect.right;
+                  const tableRect = $table[0].getBoundingClientRect();
+
+                  $line.css({
+                    left: (window.scrollX + lineX) + "px",
+                    top: (window.scrollY + targetRect.top) + "px",
+                    height: (tableRect.bottom - targetRect.top) + "px",
+                    position: "absolute",
+                    display: "block",
+                  });
+                  
+                  lastInsertIdx = insertIdx;
+                } else {
+                  $line.css("display", "none");
+                  lastInsertIdx = -1;
+                }
+              }
+            });
+
+            $(document).on("mouseup.dtDrag", function () {
+              $(document).off("mousemove.dtDrag mouseup.dtDrag");
+
+              if (isDragging) {
+                $th.removeClass("dt-dragging-original");
+                if ($ghost) $ghost.remove();
+                if ($line) $line.remove();
+
+                if (lastInsertIdx !== -1 && lastInsertIdx !== index && lastInsertIdx !== index + 1) {
+                  handleColumnReorder(index, lastInsertIdx);
+                }
+              }
+            });
+          });
+        });
+      };
+
+      const handleColumnReorder = (fromIdx, toIdx) => {
+        const fromUserIdx = selectable ? fromIdx - 1 : fromIdx;
+        const toUserIdx = selectable ? toIdx - 1 : toIdx;
+
+        // Clear layout fixed class and inline styles on the table and headers to let them recalculate perfectly
+        $table.removeClass("dt-layout-fixed");
+        $table.find("thead th").css({
+          width: "",
+          "min-width": "",
+          "max-width": ""
+        }).removeAttr("data-resized-width");
+
+        setOrderedColumns((prev) => {
+          const nextColumns = reorderArray(prev, fromUserIdx, toUserIdx);
+          
+          const visualColumnsOrder = nextColumns.map((col, idx) => ({
+            title: col.title,
+            dataKey: col.data,
+            index: idx,
+          }));
+
+          console.log("Column Reorder Event Details:", {
+            fromIndex: fromUserIdx,
+            toIndex: toUserIdx,
+            draggedColumn: prev[fromUserIdx]?.title,
+          });
+          console.log("New Column Order (Visual):", visualColumnsOrder);
+
+          return nextColumns;
+        });
+      };
+
+      enableColumnResizing();
+      enableDragAndDropReordering();
+
+      // A function to restore the selections (checked checkboxes and .selected class) on redraw
+      const restoreSelection = () => {
+        if (!selectable) return;
+        let checkedCount = 0;
+        let totalCount = 0;
+
+        $table.find("tbody tr").each(function () {
+          const rowData = datatable.row(this).data();
+          if (rowData) {
+            totalCount++;
+            const rowId = getRowId(rowData);
+            const isSelected = selectedRowIdsRef.current.has(rowId);
+            $(this).toggleClass("selected", isSelected);
+            $(this).find(".dt-row-select").prop("checked", isSelected);
+            if (isSelected) {
+              checkedCount++;
+            }
+          }
+        });
+
+        const $selectAll = $table.find(".dt-select-all");
+        if (totalCount > 0) {
+          $selectAll.prop("checked", checkedCount === totalCount);
+          $selectAll.prop("indeterminate", checkedCount > 0 && checkedCount < totalCount);
+        } else {
+          $selectAll.prop("checked", false).prop("indeterminate", false);
+        }
+      };
+
+      // Re-apply features when columns are drawn (e.g. pagination, sorting)
       datatable.on("draw", () => {
         enableColumnResizing();
+        enableDragAndDropReordering();
+        restoreSelection();
       });
 
-      // 3. Inject Export dropdown (CSV, Excel, PDF) to the left of the native Search box
+      // 4. Inject Export dropdown (CSV, Excel, PDF) to the left of the native Search box
       const $filterContainer = $wrapper.find(".dataTables_filter");
       if ($filterContainer.length) {
         // Remove any old buttons to avoid duplicates
@@ -462,7 +964,7 @@ const useDataTableMS = ({
                 if (Array.isArray(row)) {
                   cell = row[origIdx] !== undefined && row[origIdx] !== null ? row[origIdx] : "";
                 } else if (typeof row === "object") {
-                  const colKey = columns[origIdx]?.data;
+                  const colKey = orderedColumns[origIdx]?.data;
                   cell = colKey && row[colKey] !== undefined && row[colKey] !== null ? row[colKey] : "";
                 }
                 if (typeof cell === "object") cell = cell.text || cell.toString() || "";
@@ -498,7 +1000,7 @@ const useDataTableMS = ({
                 if (Array.isArray(row)) {
                   cell = row[origIdx] !== undefined && row[origIdx] !== null ? row[origIdx] : "";
                 } else if (typeof row === "object") {
-                  const colKey = columns[origIdx]?.data;
+                  const colKey = orderedColumns[origIdx]?.data;
                   cell = colKey && row[colKey] !== undefined && row[colKey] !== null ? row[colKey] : "";
                 }
                 if (typeof cell === "object") cell = cell.text || cell.toString() || "";
@@ -520,7 +1022,7 @@ const useDataTableMS = ({
                 if (Array.isArray(row)) {
                   cell = row[origIdx] !== undefined && row[origIdx] !== null ? row[origIdx] : "";
                 } else if (typeof row === "object") {
-                  const colKey = columns[origIdx]?.data;
+                  const colKey = orderedColumns[origIdx]?.data;
                   cell = colKey && row[colKey] !== undefined && row[colKey] !== null ? row[colKey] : "";
                 }
                 if (typeof cell === "object") cell = cell.text || cell.toString() || "";
@@ -558,6 +1060,123 @@ const useDataTableMS = ({
         });
       }
 
+      // 5. Bind Row Selection Event Handlers
+      if (selectable) {
+        $table.off("change", ".dt-row-select").on("change", ".dt-row-select", function (e) {
+          e.stopPropagation();
+          const $tr = $(this).closest("tr");
+          const rowData = datatable.row($tr[0]).data();
+          if (!rowData) return;
+
+          const rowId = getRowId(rowData);
+          const isChecked = $(this).is(":checked");
+
+          if (isChecked) {
+            selectedRowIdsRef.current.add(rowId);
+          } else {
+            selectedRowIdsRef.current.delete(rowId);
+          }
+
+          $tr.toggleClass("selected", isChecked);
+
+          // Update Select All checkbox state
+          const allCheckboxes = $table.find(".dt-row-select");
+          const checkedCheckboxes = allCheckboxes.filter(":checked");
+          $table.find(".dt-select-all").prop("checked", allCheckboxes.length === checkedCheckboxes.length);
+          $table.find(".dt-select-all").prop("indeterminate", checkedCheckboxes.length > 0 && checkedCheckboxes.length < allCheckboxes.length);
+
+          triggerSelectionChange();
+        });
+
+        $table.off("change", ".dt-select-all").on("change", ".dt-select-all", function (e) {
+          e.stopPropagation();
+          const isChecked = $(this).is(":checked");
+
+          $table.find("tbody tr").each(function () {
+            const rowData = datatable.row(this).data();
+            if (rowData) {
+              const rowId = getRowId(rowData);
+              if (isChecked) {
+                selectedRowIdsRef.current.add(rowId);
+              } else {
+                selectedRowIdsRef.current.delete(rowId);
+              }
+              $(this).toggleClass("selected", isChecked);
+              $(this).find(".dt-row-select").prop("checked", isChecked);
+            }
+          });
+
+          triggerSelectionChange();
+        });
+
+        const triggerSelectionChange = () => {
+          if (typeof onSelectionChangeRef.current === "function") {
+            const selectedData = [];
+            displayData.forEach((item) => {
+              const rowId = getRowId(item);
+              if (selectedRowIdsRef.current.has(rowId)) {
+                selectedData.push(item);
+              }
+            });
+            onSelectionChangeRef.current(selectedData);
+          }
+        };
+      }
+
+      // 6. Bind Row Click Handlers
+      if (typeof onRowClickRef.current === "function") {
+        $table.off("click", "tbody tr").on("click", "tbody tr", function (e) {
+          if ($(e.target).closest(".dt-select-cell, [data-table='action'], .btn, .dropdown, input").length) {
+            return;
+          }
+          const rowData = datatable.row(this).data();
+          if (rowData) {
+            onRowClickRef.current(rowData);
+          }
+        });
+      }
+
+      // 7. Bind Infinite Scroll events
+      if (enableInfiniteScroll) {
+        const $scrollBody = $wrapper.find(".dataTables_scrollBody");
+        $scrollBody.off("scroll.dtInfinite").on("scroll.dtInfinite", function () {
+          const scrollTop = $(this).scrollTop();
+          const scrollHeightVal = $(this)[0].scrollHeight;
+          const clientHeight = $(this)[0].clientHeight;
+
+          if (scrollTop + clientHeight >= scrollHeightVal - 20) {
+            const isLoadingRefVal = isServerInfinite ? internalLoading : isLoading;
+            if (!isLoadingRefVal) {
+              if (isServerInfinite) {
+                fetchMoreDataRef.current?.();
+              } else if (typeof onLoadMoreRef.current === "function") {
+                onLoadMoreRef.current();
+              }
+            }
+          }
+        });
+      }
+
+      // 8. Bind Search event listener for Server Infinite Scroll
+      if (isServerInfinite) {
+        datatable.on("search.dt", () => {
+          const query = datatable.search();
+          if (query !== searchRef.current) {
+            searchRef.current = query;
+            pageRef.current = 1;
+            hasMoreRef.current = true;
+
+            if (searchDebounceTimeoutRef.current) {
+              clearTimeout(searchDebounceTimeoutRef.current);
+            }
+
+            searchDebounceTimeoutRef.current = setTimeout(() => {
+              fetchMoreDataRef.current?.(true);
+            }, 400);
+          }
+        });
+      }
+
       if (typeof actionCallback === "function") {
         $(datatable.table().body()).on(
           "click",
@@ -591,6 +1210,7 @@ const useDataTableMS = ({
     }, 0);
 
     return () => {
+      clearTimeout(timer);
       if (tableRef.current && $.fn.DataTable && $.fn.DataTable.isDataTable(tableRef.current)) {
         $(tableRef.current).DataTable().destroy();
       }
@@ -599,17 +1219,81 @@ const useDataTableMS = ({
     };
   }, [
     tableRef,
-    columns,
-    data,
+    serializedColumns,
     url,
-    actionCallback,
     isColumnHidden,
     isColumnHiddenClass,
     isFilterColumn,
     isFooter,
     isMultilang,
     bordered,
+    selectable,
+    zebra,
+    enableInfiniteScroll,
+    scrollHeight,
+    pageSize,
+    emptyMessage,
   ]);
+
+  // 4. Perform dynamic data loading/append updates (optimized for smooth infinite scrolls)
+  useEffect(() => {
+    if (tableRef.current && $.fn.DataTable && $.fn.DataTable.isDataTable(tableRef.current)) {
+      const datatable = $(tableRef.current).DataTable();
+
+      if (enableInfiniteScroll) {
+        const currentCount = datatable.rows().count();
+        if (displayData.length > currentCount) {
+          const newRows = displayData.slice(currentCount);
+          datatable.rows.add(newRows).draw(false);
+        } else if (displayData.length !== currentCount) {
+          // Data got replaced or reset
+          datatable.clear().rows.add(displayData).draw(false);
+        }
+      } else {
+        // Standard paging mode: clear and draw all records preserving the page position
+        datatable.clear().rows.add(displayData).draw(false);
+      }
+    }
+  }, [displayData, enableInfiniteScroll, tableRef]);
+
+  // 5. Toggle loading overlays on changes to displayLoading
+  useEffect(() => {
+    if (tableRef.current && $.fn.DataTable && $.fn.DataTable.isDataTable(tableRef.current)) {
+      const $wrapper = $(tableRef.current).closest(".dataTables_wrapper");
+      if ($wrapper.length) {
+        // Remove any existing loaders first
+        $wrapper.find(".dt-loading-overlay").remove();
+        $wrapper.find(".dt-infinite-loading-spinner").remove();
+
+        if (displayLoading) {
+          if (enableInfiniteScroll && displayData.length > 0) {
+            // Bottom spinner for infinite scroll
+            const $scrollBody = $wrapper.find(".dataTables_scrollBody");
+            if ($scrollBody.length) {
+              $scrollBody.append(`
+                <div class="dt-infinite-loading-spinner text-center py-2">
+                  <div class="spinner-border spinner-border-sm text-primary" role="status" style="width: 1.2rem; height: 1.2rem;">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </div>
+              `);
+              $scrollBody.scrollTop($scrollBody[0].scrollHeight);
+            }
+          } else {
+            // Full-table overlay (for standard mode or when table is empty)
+            $wrapper.css("position", "relative");
+            $wrapper.append(`
+              <div class="dt-loading-overlay d-flex justify-content-center align-items-center position-absolute top-0 start-0 w-100 h-100">
+                <div class="spinner-border text-primary" role="status" style="width: 2.5rem; height: 2.5rem;">
+                  <span class="visually-hidden">Loading...</span>
+                </div>
+              </div>
+            `);
+          }
+        }
+      }
+    }
+  }, [displayLoading, displayData, tableRef]);
 };
 
 export default useDataTableMS;

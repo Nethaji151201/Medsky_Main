@@ -1,10 +1,13 @@
-import React, { useRef } from "react";
-import { Row, Col } from "react-bootstrap";
+import React, { useRef, useState } from "react";
+import { Row, Col, Button, Badge } from "react-bootstrap";
 import Card from "../../../components/Card";
 import useDataTableMS from "../../../components/hooks/useDatatableMS";
 
 const GlobalType = () => {
     const tableRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [selectedRows, setSelectedRows] = useState([]);
+    const [clickedRow, setClickedRow] = useState(null);
 
     // Define columns matching the user's specification
     const columns = [
@@ -46,15 +49,25 @@ const GlobalType = () => {
         { globalTypeName: "Diagnostic Specialty", sortOrder: 10, status: "Inactive" }
     ];
 
-    // Initialize our premium hook
+    // Initialize our premium hook with all requested props
     useDataTableMS({
         tableRef: tableRef,
         columns: columns,
         data: sampleData,
         isFilterColumn: false, // Enables header-level column filters
-        addSNo: true,         // Adds automatic Serial Number column
-        autoSize: true,       // Enables automatic column resizing
-        bordered: true,
+        bordered: true,       // Enable premium small grid borders
+        selectable: true,      // Prepend a premium row selection checkbox column
+        onSelectionChange: (rows) => {
+            console.log("Selected Rows changed:", rows);
+            setSelectedRows(rows);
+        },
+        onRowClick: (row) => {
+            console.log("Row Clicked:", row);
+            setClickedRow(row);
+        },
+        zebra: true,           // Toggle alternate row grey backgrounds
+        isLoading: isLoading,  // Toggle premium loading overlay state
+        emptyMessage: "No global types found", // Scoped empty message
     });
 
     return (
@@ -62,16 +75,34 @@ const GlobalType = () => {
             <Row>
                 <Col sm="12">
                     <Card>
-                        <Card.Header className="d-flex justify-content-between align-items-center">
+                        <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                             <Card.Header.Title className="header-title">
                                 <h4 className="card-title mb-0">Global Type Master</h4>
                             </Card.Header.Title>
+                            <div className="d-flex align-items-center gap-3">
+                                {selectedRows.length > 0 && (
+                                    <Badge bg="primary" className="py-2 px-3">
+                                        {selectedRows.length} Row{selectedRows.length > 1 ? "s" : ""} Selected
+                                    </Badge>
+                                )}
+                                <Button
+                                    variant={isLoading ? "success" : "outline-primary"}
+                                    size="sm"
+                                    onClick={() => setIsLoading(!isLoading)}
+                                    className="d-flex align-items-center gap-1"
+                                >
+                                    <i className={isLoading ? "ri-play-line" : "ri-loader-4-line"}></i>
+                                    {isLoading ? "Show Table Data" : "Test Loading State"}
+                                </Button>
+                            </div>
                         </Card.Header>
                         <Card.Body>
-                            <p className="text-muted mb-4">
-                                Manage global classifications and sorting hierarchies. Drag and drop column headers to reorder,
-                                toggle column visibility using the Columns checklist, or use dynamic header filters to search records.
+                            <p className="text-muted mb-3">
+                                Manage global classifications and sorting hierarchies. Drag and drop column borders to resize,
+                                export records to CSV, Excel, or PDF, and test premium features like row selection, zebra striping,
+                                and loading overlays.
                             </p>
+
                             <div className="table-responsive custom-table-search">
                                 <table
                                     ref={tableRef}
