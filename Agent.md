@@ -5,7 +5,7 @@ Welcome to the Medsky Main UI development environment. As an AI coding agent, yo
 ---
 
 ## 🛠️ Technology Stack
-- **Framework:** React (v18.3.1) with Vite
+- **Framework:** React (v19.2.0) with Vite
 - **UI & Styling:** React Bootstrap (Bootstrap v5.3.3), Custom Sass/SCSS (`src/assets/scss/`, `src/assets/custom/custom.scss`)
 - **State Management:** Redux Toolkit (`@reduxjs/toolkit` and `react-redux`)
 - **Routing:** React Router DOM (v6.26.1 - using `createBrowserRouter` & `RouterProvider`)
