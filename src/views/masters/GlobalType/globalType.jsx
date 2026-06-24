@@ -80,6 +80,7 @@ const GlobalType = () => {
         isFilterColumn: false, // Enables header-level column filters
         bordered: true,       // Enable premium small grid borders
         selectable: true,      // Prepend a premium row selection checkbox column
+        showSerialNo: true,    // Enable serial number column
         onSelectionChange: (rows) => {
             console.log("Selected Rows changed:", rows);
             setSelectedRows(rows);
@@ -285,7 +286,10 @@ const GlobalType = () => {
                                 <Button
                                     variant="primary"
                                     size="sm"
-                                    onClick={() => setShowAddModal(true)}
+                                    onClick={() => {
+                                        setClickedRow(null);
+                                        setShowAddModal(true);
+                                    }}
                                     className="d-flex align-items-center gap-1"
                                 >
                                     <i className="ri-add-line"></i>

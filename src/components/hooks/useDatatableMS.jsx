@@ -51,6 +51,10 @@ const useDataTableMS = ({
   onSelectionChange,
   zebra = true, // ON by default — odd rows gray, even rows white
 
+  // S.No serial number feature
+  showSerialNo = false,
+  serialNo = false,
+
   // Infinite Scroll
   enableInfiniteScroll = false,
   apiFunction,
@@ -61,6 +65,10 @@ const useDataTableMS = ({
   // 1. Keep orderedColumns state to manage native HTML5 drag and drop reordering
   const [orderedColumns, setOrderedColumns] = useState(columns);
   const serializedParentColumns = serializeColumns(columns);
+
+  // Calculate S.No and selection columns pinned to the left
+  const hasSerialNo = showSerialNo || serialNo;
+  const pinnedCount = (selectable ? 1 : 0) + (hasSerialNo ? 1 : 0);
 
   // Sync state if parent columns prop changes
   useEffect(() => {
@@ -97,6 +105,8 @@ const useDataTableMS = ({
 
   // 4. Selection State preservation
   const selectedRowIdsRef = useRef(new Set());
+  const columnWidthsRef = useRef({});
+  const columnVisibilityRef = useRef({});
 
   // Helper to get unique row ID
   const getRowId = (row) => {
@@ -204,6 +214,20 @@ const useDataTableMS = ({
           background-color: #1a1e29 !important;
           color: #f8f9fa !important;
           border-bottom: 2px solid #2d3748 !important;
+        }
+
+        /* Hide sorting icons on utility columns (selection checkbox and S.No) */
+        table.dataTable thead th.dt-select-cell::before,
+        table.dataTable thead th.dt-select-cell::after,
+        table.dataTable thead th.dt-sno-cell::before,
+        table.dataTable thead th.dt-sno-cell::after {
+          display: none !important;
+          content: "" !important;
+        }
+        table.dataTable thead th.dt-select-cell,
+        table.dataTable thead th.dt-sno-cell {
+          padding-right: 8px !important;
+          background-image: none !important;
         }
 
         /* Scoped small borders - only active when bordered parameter is true */
@@ -410,6 +434,126 @@ const useDataTableMS = ({
           color: #f8f9fa !important;
         }
 
+        /* Scoped styling for custom column show/hide dropdown & export dropdown with premium animations */
+        .dt-ms-instance .col-dropdown-menu,
+        .dt-ms-instance .export-dropdown-menu {
+          border: 1px solid rgba(0, 0, 0, 0.08) !important;
+          box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12), 0 8px 15px -8px rgba(0, 0, 0, 0.06) !important;
+          border-radius: 10px !important;
+          overflow: hidden !important;
+          transform: translateY(8px) scale(0.98);
+          opacity: 0;
+          visibility: hidden;
+          display: block !important;
+          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease, visibility 0.2s ease !important;
+          background-color: rgba(255, 255, 255, 0.95) !important;
+          backdrop-filter: blur(10px) !important;
+          z-index: 1100 !important;
+        }
+        .dt-ms-instance .col-dropdown-menu.show,
+        .dt-ms-instance .export-dropdown-menu.show {
+          transform: translateY(0) scale(1);
+          opacity: 1;
+          visibility: visible !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu,
+        [data-bs-theme="dark"] .dt-ms-instance .export-dropdown-menu {
+          background-color: rgba(26, 30, 41, 0.95) !important;
+          border-color: rgba(255, 255, 255, 0.08) !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .col-dropdown-footer {
+          background-color: #f8f9fa !important;
+          border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu .col-dropdown-footer {
+          background-color: #1a1e29 !important;
+          border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .col-list-container {
+          scrollbar-width: thin !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .col-list-container::-webkit-scrollbar {
+          width: 5px !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .col-list-container::-webkit-scrollbar-thumb {
+          background-color: #cbd5e1 !important;
+          border-radius: 4px !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu .col-list-container::-webkit-scrollbar-thumb {
+          background-color: #4a5568 !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .input-group-text,
+        .dt-ms-instance .col-dropdown-menu .col-search-input {
+          background-color: #ffffff !important;
+          border-color: #cbd5e1 !important;
+          color: #475569 !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu .input-group-text,
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu .col-search-input {
+          background-color: #151922 !important;
+          border-color: #2d3748 !important;
+          color: #cbd5e1 !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .col-search-input:focus {
+          border-color: #3b82f6 !important;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15) !important;
+        }
+        .dt-ms-instance .col-reset-btn {
+          color: #64748b !important;
+          transition: color 0.15s ease !important;
+        }
+        .dt-ms-instance .col-reset-btn:hover {
+          color: #3b82f6 !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .col-reset-btn:hover {
+          color: #60a5fa !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .form-check-label,
+        .dt-ms-instance .col-dropdown-menu .form-check-label.text-secondary {
+          color: #475569 !important;
+          cursor: pointer !important;
+          user-select: none !important;
+        }
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu .form-check-label,
+        [data-bs-theme="dark"] .dt-ms-instance .col-dropdown-menu .form-check-label.text-secondary {
+          color: #cbd5e1 !important;
+        }
+        /* Custom Flex Checkbox overrides to prevent label clipping/squishing */
+        .dt-ms-instance .col-dropdown-menu .form-check {
+          padding-left: 0 !important;
+          margin-bottom: 0 !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .form-check-input {
+          float: none !important;
+          margin-left: 0 !important;
+          margin-top: 0 !important;
+          border-radius: 4px !important;
+          border: 1.5px solid #cbd5e1 !important;
+          transition: all 0.15s ease-in-out !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .form-check-input:checked {
+          background-color: #3b82f6 !important;
+          border-color: #3b82f6 !important;
+        }
+        .dt-ms-instance .col-dropdown-menu .form-check-input:indeterminate {
+          background-color: #3b82f6 !important;
+          border-color: #3b82f6 !important;
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e") !important;
+        }
+        .dt-ms-instance .col-item {
+          border-radius: 6px !important;
+          padding: 6px 12px !important;
+          margin: 3px 0 !important;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+          display: flex !important;
+          align-items: center !important;
+          gap: 10px !important;
+        }
+        .dt-ms-instance .col-item:hover {
+          background-color: rgba(59, 130, 246, 0.08) !important;
+          transform: translateX(4px) !important;
+        }
+
         /* Mobile responsive stacking and centering */
         @media (max-width: 767.98px) {
           .dt-ms-instance .row > div:has(.dataTables_filter),
@@ -430,8 +574,23 @@ const useDataTableMS = ({
     }
 
     const timer = setTimeout(() => {
-      // Prepend dynamic Row Selection checkbox column if selectable is true
+      // Prepend dynamic S.No and Row Selection checkbox columns
       let finalColumns = [...orderedColumns];
+
+      if (hasSerialNo) {
+        finalColumns.unshift({
+          data: null,
+          defaultContent: "",
+          orderable: false,
+          className: "dt-sno-cell text-center",
+          width: "50px",
+          title: "S.No",
+          render: function () {
+            return "";
+          },
+        });
+      }
+
       if (selectable) {
         finalColumns.unshift({
           data: null,
@@ -446,6 +605,18 @@ const useDataTableMS = ({
         });
       }
 
+      // Apply saved column widths and visibility from ref to column definitions
+      finalColumns = finalColumns.map((col) => {
+        let updatedCol = { ...col };
+        if (col.data && columnWidthsRef.current[col.data]) {
+          updatedCol.width = columnWidthsRef.current[col.data] + "px";
+        }
+        if (col.data && columnVisibilityRef.current[col.data] !== undefined) {
+          updatedCol.visible = columnVisibilityRef.current[col.data];
+        }
+        return updatedCol;
+      });
+
       let datatableObj = {
         dom: enableInfiniteScroll
           ? '<"row align-items-center"<"col-md-6" f>><"table-responsive" rt><"clear">'
@@ -453,10 +624,15 @@ const useDataTableMS = ({
         autoWidth: false,
         columns: finalColumns,
         destroy: true,
+        order: [],
         language: {
           zeroRecords: emptyMessage,
           emptyTable: emptyMessage,
         },
+        rowCallback: function (row, data, displayNum, displayIndex, dataIndex) {
+          // Set strictly visual sequential S.No on draw
+          $(row).find(".dt-sno-cell").html(displayIndex + 1);
+        }
       };
 
       if (url) {
@@ -485,7 +661,11 @@ const useDataTableMS = ({
             const footerRow = document.createElement("tr");
             finalColumns.forEach((column) => {
               const footerCell = document.createElement("th");
-              if (column.className && column.className.includes("dt-select-cell")) {
+              if (
+                column.className &&
+                (column.className.includes("dt-select-cell") ||
+                  column.className.includes("dt-sno-cell"))
+              ) {
                 footerCell.innerHTML = "";
               } else {
                 footerCell.append(column.title);
@@ -505,7 +685,11 @@ const useDataTableMS = ({
             const table = $(tableRef.current).DataTable();
             finalColumns.forEach((column) => {
               const footerCell = document.createElement("td");
-              if (column.className && column.className.includes("dt-select-cell")) {
+              if (
+                column.className &&
+                (column.className.includes("dt-select-cell") ||
+                  column.className.includes("dt-sno-cell"))
+              ) {
                 footerRow.append(footerCell);
                 return;
               }
@@ -567,8 +751,22 @@ const useDataTableMS = ({
       if (zebra) {
         $table.addClass("dt-zebra-stripes");
       }
+      if (Object.keys(columnWidthsRef.current).length > 0) {
+        $table.addClass("dt-layout-fixed");
+      }
 
       let datatable = $table.DataTable(datatableObj);
+
+      // Add classes to header cells
+      $table.find("thead tr:first-child th").each(function (index) {
+        const $th = $(this);
+        if (selectable && index === 0) {
+          $th.addClass("dt-select-cell");
+        }
+        if (hasSerialNo && index === (selectable ? 1 : 0)) {
+          $th.addClass("dt-sno-cell");
+        }
+      });
 
       // Scopes the parent wrapper instance
       const $wrapper = $table.closest(".dataTables_wrapper");
@@ -578,8 +776,22 @@ const useDataTableMS = ({
       const enableColumnResizing = () => {
         const isLayoutFixed = $table.hasClass("dt-layout-fixed");
 
-        $table.find("thead th").each(function () {
+        $table.find("thead tr:first-child th").each(function (idx) {
           const $th = $(this);
+
+          // Apply saved width from ref if available
+          const colObj = finalColumns[idx];
+          if (colObj && colObj.data) {
+            const storedWidth = columnWidthsRef.current[colObj.data];
+            if (storedWidth) {
+              $th.attr("data-resized-width", storedWidth);
+              $th.css({
+                "width": storedWidth + "px",
+                "min-width": storedWidth + "px",
+                "max-width": storedWidth + "px"
+              });
+            }
+          }
 
           // Re-apply stored width if layout is fixed to prevent jumpiness on redraw
           const storedWidth = $th.attr("data-resized-width");
@@ -591,10 +803,12 @@ const useDataTableMS = ({
             });
           }
 
-          // Only add resizer if it doesn't exist yet and it's not a helper/empty column or select cell
+          // Only add resizer if it doesn't exist yet and it's not a helper/empty column, select cell, or S.No cell
           if (
             !$th.find(".dt-resizer").length &&
             !$th.find(".dt-select-all").length &&
+            !$th.hasClass("dt-sno-cell") &&
+            $th.text() !== "S.No" &&
             $th.text() !== "Action" &&
             $th.text() !== ""
           ) {
@@ -610,7 +824,7 @@ const useDataTableMS = ({
 
               // Lock all header column widths in pixels before starting fixed-layout resize
               if (!$table.hasClass("dt-layout-fixed")) {
-                $table.find("thead th").each(function () {
+                $table.find("thead tr:first-child th").each(function (cellIdx) {
                   const $cell = $(this);
                   const currentWidth = $cell.outerWidth();
                   $cell.attr("data-resized-width", currentWidth);
@@ -619,6 +833,12 @@ const useDataTableMS = ({
                     "min-width": currentWidth + "px",
                     "max-width": currentWidth + "px"
                   });
+
+                  // Save all current widths into ref to lock them
+                  const cellColObj = finalColumns[cellIdx];
+                  if (cellColObj && cellColObj.data) {
+                    columnWidthsRef.current[cellColObj.data] = currentWidth;
+                  }
                 });
                 $table.addClass("dt-layout-fixed");
               }
@@ -637,6 +857,14 @@ const useDataTableMS = ({
                 $resizer.removeClass("resizing");
                 $(document).off("mousemove.colResize mouseup.colResize");
                 datatable.columns.adjust();
+
+                // Save final width of resized column
+                const finalWidth = $th.outerWidth();
+                const thIndex = $th.index();
+                const colObj = finalColumns[thIndex];
+                if (colObj && colObj.data) {
+                  columnWidthsRef.current[colObj.data] = finalWidth;
+                }
               });
 
               e.preventDefault();
@@ -648,13 +876,13 @@ const useDataTableMS = ({
 
       // 3. Implement AG-Grid-style Column Reordering with a Custom Ghost Helper and full vertical Insertion Line
       const enableDragAndDropReordering = () => {
-        const $headers = $table.find("thead th");
+        const $headers = $table.find("thead tr:first-child th");
 
         $headers.each(function (index) {
           const $th = $(this);
 
-          // Skip selection checkbox column
-          if (selectable && index === 0) return;
+          // Skip utility/pinned columns
+          if (index < pinnedCount) return;
           if ($th.text() === "Action" || $th.text() === "") return;
 
           $th.css("cursor", "grab");
@@ -721,8 +949,8 @@ const useDataTableMS = ({
                   }
                 });
 
-                // Enforce boundary constraints (don't move checkbox or move columns before it)
-                if (selectable && (insertIdx <= 1 || targetIdx === 0)) {
+                // Enforce boundary constraints (don't move helper/pinned columns or insert before them)
+                if (insertIdx < pinnedCount || targetIdx < pinnedCount) {
                   $line.css("display", "none");
                   lastInsertIdx = -1;
                   return;
@@ -767,12 +995,12 @@ const useDataTableMS = ({
       };
 
       const handleColumnReorder = (fromIdx, toIdx) => {
-        const fromUserIdx = selectable ? fromIdx - 1 : fromIdx;
-        const toUserIdx = selectable ? toIdx - 1 : toIdx;
+        const fromUserIdx = fromIdx - pinnedCount;
+        const toUserIdx = toIdx - pinnedCount;
 
         // Clear layout fixed class and inline styles on the table and headers to let them recalculate perfectly
         $table.removeClass("dt-layout-fixed");
-        $table.find("thead th").css({
+        $table.find("thead tr:first-child th").css({
           width: "",
           "min-width": "",
           "max-width": ""
@@ -835,9 +1063,20 @@ const useDataTableMS = ({
         enableColumnResizing();
         enableDragAndDropReordering();
         restoreSelection();
+
+        // Re-apply header cell classes on redraw
+        $table.find("thead tr:first-child th").each(function (index) {
+          const $th = $(this);
+          if (selectable && index === 0) {
+            $th.addClass("dt-select-cell");
+          }
+          if (hasSerialNo && index === (selectable ? 1 : 0)) {
+            $th.addClass("dt-sno-cell");
+          }
+        });
       });
 
-      // 4. Inject Export dropdown (CSV, Excel, PDF) to the left of the native Search box
+      // 4. Inject Custom Columns Dropdown and Export dropdown to the left of the native Search box
       const $filterContainer = $wrapper.find(".dataTables_filter");
       if ($filterContainer.length) {
         // Remove any old buttons to avoid duplicates
@@ -845,12 +1084,35 @@ const useDataTableMS = ({
 
         const buttonsHtml = `
           <div class="dt-custom-buttons d-inline-flex align-items-center gap-2 me-2">
+            <!-- Custom Columns Dropdown -->
+            <div class="dropdown d-inline-block">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1 col-dropdown-toggle" type="button" aria-expanded="false">
+                <i class="ri-columns-line"></i> Columns
+              </button>
+              <div class="dropdown-menu dropdown-menu-end p-0 col-dropdown-menu" style="width: 250px;">
+                <div class="p-2 border-bottom">
+                  <div class="input-group input-group-sm">
+                    <span class="input-group-text border-end-0 text-muted"><i class="ri-search-line"></i></span>
+                    <input type="text" class="form-control border-start-0 col-search-input" placeholder="Search columns...">
+                  </div>
+                </div>
+                <div class="col-list-container" style="max-height: 200px; overflow-y: auto; padding: 8px 12px;"></div>
+                <div class="p-2 px-3 border-top d-flex justify-content-between align-items-center col-dropdown-footer">
+                  <div class="form-check mb-0 d-flex align-items-center gap-2">
+                    <input class="form-check-input toggle-all-cols-chk" type="checkbox" id="toggleAllCols" style="cursor: pointer;">
+                    <label class="form-check-label small fw-semibold text-secondary" for="toggleAllCols" style="cursor: pointer; user-select: none;">Show/Hide All</label>
+                  </div>
+                  <button class="btn btn-link btn-sm text-decoration-none col-reset-btn text-muted p-0 small fw-bold" style="font-size: 11px;">RESET</button>
+                </div>
+              </div>
+            </div>
+
             <!-- Custom Export Dropdown -->
             <div class="dropdown d-inline-block">
-              <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1 export-dropdown-toggle" type="button" aria-expanded="false">
                 <i class="ri-download-2-line"></i> Export
               </button>
-              <ul class="dropdown-menu dropdown-menu-end">
+              <ul class="dropdown-menu dropdown-menu-end export-dropdown-menu">
                 <li><a class="dropdown-item export-csv-btn" href="#"><i class="ri-file-text-line me-2"></i>CSV</a></li>
                 <li><a class="dropdown-item export-excel-btn" href="#"><i class="ri-file-excel-line me-2"></i>Excel</a></li>
                 <li><a class="dropdown-item export-pdf-btn" href="#"><i class="ri-file-pdf-line me-2"></i>PDF</a></li>
@@ -861,22 +1123,157 @@ const useDataTableMS = ({
         $filterContainer.prepend(buttonsHtml);
 
         const $customButtons = $filterContainer.find(".dt-custom-buttons");
-        const $toggleBtn = $customButtons.find(".dropdown-toggle");
-        const $dropdownMenu = $customButtons.find(".dropdown-menu");
+        const $colToggleBtn = $customButtons.find(".col-dropdown-toggle");
+        const $colDropdownMenu = $customButtons.find(".col-dropdown-menu");
+        const $exportToggleBtn = $customButtons.find(".export-dropdown-toggle");
+        const $exportDropdownMenu = $customButtons.find(".export-dropdown-menu");
 
-        // Robust manual click handler for the dropdown toggle
-        $toggleBtn.off("click").on("click", function (e) {
+        // Populate column list in the dropdown
+        const populateColumnList = () => {
+          const $listContainer = $customButtons.find(".col-list-container");
+          $listContainer.empty();
+
+          let allVisible = true;
+          let anyVisible = false;
+
+          datatable.columns().every(function (idx) {
+            const column = this;
+            const headerCell = column.header();
+            const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
+
+            // Skip helper/pinned columns and action column
+            if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
+              return;
+            }
+
+            const isVisible = column.visible();
+            if (isVisible) {
+              anyVisible = true;
+            } else {
+              allVisible = false;
+            }
+
+            const itemHtml = `
+              <div class="form-check py-1 col-item" data-col-title="${title.toLowerCase()}">
+                <input class="form-check-input col-toggle-chk" type="checkbox" id="col_chk_${idx}" value="${idx}" ${isVisible ? "checked" : ""} style="cursor: pointer;">
+                <label class="form-check-label small text-secondary" for="col_chk_${idx}" style="cursor: pointer; user-select: none;">
+                  ${title}
+                </label>
+              </div>
+            `;
+            $listContainer.append(itemHtml);
+          });
+
+          // Update toggle-all checkbox state
+          const $toggleAll = $customButtons.find(".toggle-all-cols-chk");
+          $toggleAll.prop("checked", allVisible);
+          $toggleAll.prop("indeterminate", anyVisible && !allVisible);
+        };
+
+        // Col Dropdown toggle
+        $colToggleBtn.off("click").on("click", function (e) {
           e.preventDefault();
           e.stopPropagation();
-          const isOpen = $dropdownMenu.hasClass("show");
+          const isOpen = $colDropdownMenu.hasClass("show");
           $(".dt-custom-buttons .dropdown-menu").removeClass("show");
           if (!isOpen) {
-            $dropdownMenu.addClass("show");
+            $colDropdownMenu.addClass("show");
+            populateColumnList();
           }
         });
 
-        // Close dropdown when clicking anywhere outside
-        $(document).off("click.dtExportDropdown").on("click.dtExportDropdown", function (e) {
+        // Export Dropdown toggle
+        $exportToggleBtn.off("click").on("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const isOpen = $exportDropdownMenu.hasClass("show");
+          $(".dt-custom-buttons .dropdown-menu").removeClass("show");
+          if (!isOpen) {
+            $exportDropdownMenu.addClass("show");
+          }
+        });
+
+        // Toggle individual column visibility
+        $customButtons.off("change", ".col-toggle-chk").on("change", ".col-toggle-chk", function (e) {
+          e.stopPropagation();
+          const colIdx = parseInt($(this).val());
+          const isVisible = $(this).is(":checked");
+          const column = datatable.column(colIdx);
+          column.visible(isVisible);
+
+          // Save visibility state to ref
+          const colObj = finalColumns[colIdx];
+          if (colObj && colObj.data) {
+            columnVisibilityRef.current[colObj.data] = isVisible;
+          }
+
+          datatable.columns.adjust();
+          populateColumnList();
+        });
+
+        // Toggle all columns visibility
+        $customButtons.off("change", ".toggle-all-cols-chk").on("change", ".toggle-all-cols-chk", function (e) {
+          e.stopPropagation();
+          const isChecked = $(this).is(":checked");
+
+          datatable.columns().every(function (idx) {
+            const column = this;
+            const headerCell = column.header();
+            const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
+            if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
+              return;
+            }
+            column.visible(isChecked);
+
+            const colObj = finalColumns[idx];
+            if (colObj && colObj.data) {
+              columnVisibilityRef.current[colObj.data] = isChecked;
+            }
+          });
+
+          datatable.columns.adjust();
+          populateColumnList();
+        });
+
+        // Reset columns visibility
+        $customButtons.off("click", ".col-reset-btn").on("click", ".col-reset-btn", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+
+          datatable.columns().every(function (idx) {
+            const column = this;
+            const headerCell = column.header();
+            const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
+            if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
+              return;
+            }
+            column.visible(true);
+
+            const colObj = finalColumns[idx];
+            if (colObj && colObj.data) {
+              columnVisibilityRef.current[colObj.data] = true;
+            }
+          });
+
+          datatable.columns.adjust();
+          populateColumnList();
+        });
+
+        // Search columns in dropdown
+        $customButtons.off("keyup", ".col-search-input").on("keyup", ".col-search-input", function () {
+          const query = $(this).val().toLowerCase();
+          $customButtons.find(".col-item").each(function () {
+            const title = $(this).attr("data-col-title");
+            if (title.indexOf(query) !== -1) {
+              $(this).show();
+            } else {
+              $(this).hide();
+            }
+          });
+        });
+
+        // Close dropdowns when clicking anywhere outside
+        $(document).off("click.dtCustomDropdowns").on("click.dtCustomDropdowns", function (e) {
           if (!$(e.target).closest(".dt-custom-buttons .dropdown").length) {
             $(".dt-custom-buttons .dropdown-menu").removeClass("show");
           }
@@ -964,7 +1361,7 @@ const useDataTableMS = ({
                 if (Array.isArray(row)) {
                   cell = row[origIdx] !== undefined && row[origIdx] !== null ? row[origIdx] : "";
                 } else if (typeof row === "object") {
-                  const colKey = orderedColumns[origIdx]?.data;
+                  const colKey = orderedColumns[origIdx - pinnedCount]?.data;
                   cell = colKey && row[colKey] !== undefined && row[colKey] !== null ? row[colKey] : "";
                 }
                 if (typeof cell === "object") cell = cell.text || cell.toString() || "";
@@ -1000,7 +1397,7 @@ const useDataTableMS = ({
                 if (Array.isArray(row)) {
                   cell = row[origIdx] !== undefined && row[origIdx] !== null ? row[origIdx] : "";
                 } else if (typeof row === "object") {
-                  const colKey = orderedColumns[origIdx]?.data;
+                  const colKey = orderedColumns[origIdx - pinnedCount]?.data;
                   cell = colKey && row[colKey] !== undefined && row[colKey] !== null ? row[colKey] : "";
                 }
                 if (typeof cell === "object") cell = cell.text || cell.toString() || "";
@@ -1022,7 +1419,7 @@ const useDataTableMS = ({
                 if (Array.isArray(row)) {
                   cell = row[origIdx] !== undefined && row[origIdx] !== null ? row[origIdx] : "";
                 } else if (typeof row === "object") {
-                  const colKey = orderedColumns[origIdx]?.data;
+                  const colKey = orderedColumns[origIdx - pinnedCount]?.data;
                   cell = colKey && row[colKey] !== undefined && row[colKey] !== null ? row[colKey] : "";
                 }
                 if (typeof cell === "object") cell = cell.text || cell.toString() || "";
@@ -1229,6 +1626,8 @@ const useDataTableMS = ({
     bordered,
     selectable,
     zebra,
+    showSerialNo,
+    serialNo,
     enableInfiniteScroll,
     scrollHeight,
     pageSize,

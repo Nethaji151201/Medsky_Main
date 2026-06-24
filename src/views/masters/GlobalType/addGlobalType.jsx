@@ -69,6 +69,10 @@ const AddGlobalType = ({
             setTypeName(globalTypeData.globalTypeName);
             setSortOrder(globalTypeData.sortOrder);
             setStatus(globalTypeData.status)
+        } else {
+            setTypeName("");
+            setSortOrder("");
+            setStatus("");
         }
     }, [globalTypeData])
 
