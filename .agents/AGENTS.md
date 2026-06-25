@@ -16,7 +16,7 @@ Welcome to the Medsky Main UI development environment. As an AI coding agent, yo
 
 ## 🧩 Core Reusable Components
 
-Always check and reuse existing components before writing custom elements.
+Always check and reuse existing components before writing custom elements. Mostly use our common components to develop, and only use others if the required element is not available in our common components.
 
 ### 1. Card Container (`src/components/Card.jsx`)
 Standard component for grouping items, sections, and grids. Do not write raw `<div className="card">` elements.

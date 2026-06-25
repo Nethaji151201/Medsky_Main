@@ -1,24 +1,43 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { Form } from "react-bootstrap";
 
-const CommonTextField = ({
+const CommonTextArea = ({
   label,
   id,
   placeholder,
-  type = "text",
   value,
   onChange,
   className = "",
   width = "100%",
-  height = "32px",
+  rows = 1,
   error,
   required,
   disabled,
   style = {},
   ...props
 }) => {
+  const textareaRef = useRef(null);
+
+  const adjustHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = "auto";
+      textarea.style.height = `${Math.max(textarea.scrollHeight, 32)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustHeight();
+  }, [value]);
+
+  const handleChange = (e) => {
+    adjustHeight();
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
   const containerStyle = width ? { width, ...style } : style;
-  const inputStyle = height ? { height } : {};
 
   return (
     <Form.Group className={`form-group cust-form-input ${className}`} style={containerStyle}>
@@ -28,16 +47,22 @@ const CommonTextField = ({
         </Form.Label>
       )}
       <Form.Control
+        ref={textareaRef}
+        as="textarea"
         id={id}
-        type={type}
-        className=""
+        rows={rows}
         placeholder={placeholder}
         value={value}
-        onChange={onChange}
+        onChange={handleChange}
         disabled={disabled}
         required={required}
-        style={inputStyle}
         isInvalid={!!error}
+        style={{
+          minHeight: "32px",
+          resize: "none",
+          overflowY: "hidden",
+          ...style
+        }}
         {...props}
       />
       {error && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>}
@@ -45,4 +70,4 @@ const CommonTextField = ({
   );
 };
 
-export default CommonTextField;
+export default CommonTextArea;

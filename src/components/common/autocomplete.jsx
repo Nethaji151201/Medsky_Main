@@ -13,7 +13,7 @@ const CommonAutocomplete = ({
   onInputChange, // Callback when text input changes
   className = "",
   width = "100%",
-  height = "36px",
+  height = "32px",
   error,
   required,
   disabled,

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from 'react-bootstrap';
 import CommonTextField from "../../../components/common/textfield";
 import CommonCheckbox from "../../../components/common/checkbox";
+import CommonDatePicker from "../../../components/common/datepicker";
 import { saveGlobalType } from "../../../services/Masters/GlobalType";
 
 const AddGlobalType = ({
@@ -13,6 +14,7 @@ const AddGlobalType = ({
     const [typeName, setTypeName] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     const [status, setStatus] = useState(1); // 1 = Active, 0 = Inactive
+    const [effectiveDate, setEffectiveDate] = useState(new Date());
     const [formErrors, setFormErrors] = useState({});
 
     const handleSaveGlobalType = async (payload) => {
@@ -23,6 +25,7 @@ const AddGlobalType = ({
                 setTypeName("");
                 setSortOrder("");
                 setStatus(1);
+                setEffectiveDate(new Date());
                 setFormErrors({});
                 onSuccess();
             }
@@ -51,7 +54,8 @@ const AddGlobalType = ({
         const newRecord = {
             masterName: typeName,
             sortOrder: parseInt(sortOrder),
-            status: status
+            status: status,
+            effectiveDate: effectiveDate ? effectiveDate.toISOString().split('T')[0] : null
         };
 
         handleSaveGlobalType(newRecord);
@@ -62,10 +66,12 @@ const AddGlobalType = ({
             setTypeName(masterData.masterName || "");
             setSortOrder(masterData.sortOrder !== undefined ? masterData.sortOrder : "");
             setStatus(masterData.status !== undefined ? masterData.status : 1);
+            setEffectiveDate(masterData.effectiveDate ? new Date(masterData.effectiveDate) : new Date());
         } else {
             setTypeName("");
             setSortOrder("");
             setStatus(1); // Default to active for new entries
+            setEffectiveDate(new Date());
         }
     }, [masterData])
 
@@ -94,6 +100,15 @@ const AddGlobalType = ({
                         onChange={(e) => setSortOrder(e.target.value)}
                         error={formErrors.sortOrder}
                         required
+                    />
+
+                    {/* CommonDatePicker for effective date */}
+                    <CommonDatePicker
+                        label="Effective Date"
+                        id="effectiveDateInput"
+                        placeholder="Select Date..."
+                        value={effectiveDate}
+                        onChange={(date) => setEffectiveDate(date)}
                     />
 
                     {/* CommonCheckbox status input */}

@@ -15,7 +15,64 @@ export const MenuListNew = [
                 editPermission: true,
                 deletePermission: true,
                 viewPermission: true
-            }
+            },
+            {
+                title: 'Area',
+                to: '/masters/area',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'City',
+                to: '/masters/city',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+        ]
+    },
+    {
+        isHeader: true,
+        title: 'Docters',
+        content: [
+            {
+                title: 'Docters List',
+                to: '/docters/docters-list',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+        ]
+    },
+    {
+        isHeader: true,
+        title: 'Patients',
+        content: [
+            {
+                title: 'Patient List',
+                to: '/patients/patient-list',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'OP List',
+                to: '/patients/op-list',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
         ]
     },
     {

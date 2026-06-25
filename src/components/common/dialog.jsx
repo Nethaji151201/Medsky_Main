@@ -12,7 +12,8 @@ const CommonDialog = ({
   titleIcon = null,   // Lucide-react icon element shown beside title
   fullScreen = false,
   footer = null,
-  titleAlign = 'center' // Dynamic alignment: 'start', 'center', 'end' (default 'center')
+  titleAlign = 'center', // Dynamic alignment: 'start', 'center', 'end' (default 'center')
+  scrollable = true     // Static header/footer, scrollable body
 }) => {
   // Map maxWidth to Bootstrap sizes
   let size = undefined;
@@ -35,6 +36,7 @@ const CommonDialog = ({
       fullscreen={fullScreen}
       dialogClassName={fullWidth ? "mw-100 w-100 px-3" : ""}
       className="ps-0"
+      scrollable={scrollable}
     >
       <Modal.Header closeButton={!!onClose} closeVariant="white" className="bg-primary text-white">
         <Modal.Title as="h5" className={`d-flex align-items-center gap-2 flex-grow-1 bg-primary text-white justify-content-${titleAlign === 'end' ? 'end' : (titleAlign === 'start' ? 'start' : 'center')}`}>

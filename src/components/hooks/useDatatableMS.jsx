@@ -346,7 +346,7 @@ const useDataTableMS = ({
         /* Hover & active states (AG Grid style highlight) */
         .dt-ms-table .dt-resizer:hover::after,
         .dt-ms-table .dt-resizer.resizing::after {
-          background-color: #3f46fa !important; /* Bright blue highlight on hover/drag */
+          background-color: var(--bs-primary) !important; /* Theme primary highlight on hover/drag */
           width: 2px !important; /* Thicker line */
           height: 100% !important; /* Full height line indicator during interaction */
         }
@@ -377,12 +377,12 @@ const useDataTableMS = ({
         /* Scoped Row Selection highlighting (ensures override of zebra stripe backgrounds) */
         table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.selected td,
         table.dataTable.dt-ms-table tbody tr.selected td {
-          background-color: rgba(63, 70, 250, 0.12) !important;
+          background-color: rgba(var(--bs-primary-rgb), 0.12) !important;
           box-shadow: none !important;
         }
         [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.selected td,
         [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr.selected td {
-          background-color: rgba(63, 70, 250, 0.25) !important;
+          background-color: rgba(var(--bs-primary-rgb), 0.25) !important;
           box-shadow: none !important;
         }
 
@@ -416,7 +416,7 @@ const useDataTableMS = ({
         }
         .dt-reorder-line {
           width: 2px !important;
-          background-color: #3f46fa !important;
+          background-color: var(--bs-primary) !important;
           z-index: 9998 !important;
           pointer-events: none !important;
         }
@@ -549,15 +549,15 @@ const useDataTableMS = ({
           color: #cbd5e1 !important;
         }
         .dt-ms-instance .col-dropdown-menu .col-search-input:focus {
-          border-color: #3b82f6 !important;
-          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.15) !important;
+          border-color: var(--bs-primary) !important;
+          box-shadow: 0 0 0 2px rgba(var(--bs-primary-rgb), 0.15) !important;
         }
         .dt-ms-instance .col-reset-btn {
           color: #64748b !important;
           transition: color 0.15s ease !important;
         }
         .dt-ms-instance .col-reset-btn:hover {
-          color: #3b82f6 !important;
+          color: var(--bs-primary) !important;
         }
         [data-bs-theme="dark"] .dt-ms-instance .col-reset-btn:hover {
           color: #60a5fa !important;
@@ -586,12 +586,12 @@ const useDataTableMS = ({
           transition: all 0.15s ease-in-out !important;
         }
         .dt-ms-instance .col-dropdown-menu .form-check-input:checked {
-          background-color: #3b82f6 !important;
-          border-color: #3b82f6 !important;
+          background-color: var(--bs-primary) !important;
+          border-color: var(--bs-primary) !important;
         }
         .dt-ms-instance .col-dropdown-menu .form-check-input:indeterminate {
-          background-color: #3b82f6 !important;
-          border-color: #3b82f6 !important;
+          background-color: var(--bs-primary) !important;
+          border-color: var(--bs-primary) !important;
           background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3e%3cpath fill='none' stroke='%23fff' stroke-linecap='round' stroke-linejoin='round' stroke-width='3' d='M6 10h8'/%3e%3c/svg%3e") !important;
         }
         .dt-ms-instance .col-item {

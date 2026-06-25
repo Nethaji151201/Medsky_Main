@@ -837,3 +837,24 @@ body[data-rr-ui-modal-open] {
         flex-shrink: 0;
     }
 }
+
+// Reusable Collapsible Card Panel styling (adapted for Light/Dark mode)
+.common-collapse {
+    background-color: #f8f9fa !important;
+    border-color: #dee2e6 !important;
+    
+    .border-top {
+        border-top-color: #dee2e6 !important;
+    }
+}
+
+[data-bs-theme="dark"] {
+    .common-collapse {
+        background-color: #151922 !important; /* Premium recessed dark background */
+        border-color: #2d3748 !important;
+        
+        .border-top {
+            border-top-color: #2d3748 !important;
+        }
+    }
+}

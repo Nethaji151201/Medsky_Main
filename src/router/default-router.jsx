@@ -100,7 +100,14 @@ import SignUp from "../views/auth/sign-up"
 import RecoverPassword from "../views/auth/recover-password"
 import LockScreen from "../views/auth/lock-screen"
 import { path } from "@amcharts/amcharts4/core"
+
+// ---------- HOSPITAL ------------
 import GlobalType from "../views/masters/GlobalType/globalType"
+import PatientsList from "../views/patients/patients/patientsList"
+import OPList from "../views/patients/OP/opList"
+import DoctersList from "../views/msdocters/doctersList"
+import AreaList from "../views/masters/area/areaList"
+import CityList from "../views/masters/city/cityList"
 
 export const DefaultRoute = [
   {
@@ -111,6 +118,28 @@ export const DefaultRoute = [
       {
         path: '/masters/globalType',
         element: <GlobalType />
+      },
+      {
+        path: '/masters/area',
+        element: <AreaList />
+      },
+      {
+        path: '/masters/city',
+        element: <CityList />
+      },
+      // ------ Doctors ------
+      {
+        path: '/docters/docters-list',
+        element: <DoctersList />
+      },
+      // ------ Patients ------
+      {
+        path: '/patients/patient-list',
+        element: <PatientsList />
+      },
+      {
+        path: '/patients/op-list',
+        element: <OPList />
       },
       //  ------ Dashboard Route ------ 
       {
