@@ -159,3 +159,7 @@ When building a new view page:
   - Inactive: `badge bg-danger-subtle text-danger py-1 px-2`
   - Warning/Pending: `badge bg-warning-subtle text-warning py-1 px-2`
 - **Icon Standard:** Default to Remixicon (classes prefixed with `ri-`) for uniform styling across sidebars, tables, and buttons.
+- **Beginner-Friendly Code:** Write clean, readable, well-commented, and straightforward code. Avoid overcomplicating patterns or abstractions.
+- **Theme Colors:** Use our project primary (`var(--bs-primary)`), secondary (`var(--bs-secondary)`), and other predefined theme colors for consistent brand identity.
+- **Minimize Custom CSS:** Mostly use Bootstrap class names for layout and styling. Avoid custom CSS for new features unless absolutely necessary (where standard Bootstrap utilities cannot achieve the design).
+- **Light & Dark Mode Support:** When adding or modifying features, ensure they support both light and dark modes correctly. Verify that text is readable, components look correct, and colors contrast properly in both themes.

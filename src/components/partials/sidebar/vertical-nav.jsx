@@ -5,548 +5,556 @@ import { Link, useLocation } from "react-router-dom";
 export const MenuListNew = [
     {
         isHeader: true,
-        title: 'Masters'
-    },
-    {
-        title: 'Global Type',
-        to: '/masters/globalType',
-        icon: 'ri-home-8-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
+        title: 'Masters',
+        content: [
+            {
+                title: 'Global Type',
+                to: '/masters/globalType',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
     },
     {
         isHeader: true,
-        title: 'Dashboard'
-    },
-    {
-        title: 'Doctor Dashboard',
-        to: '/',
-        icon: 'ri-hospital-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
-    },
-    {
-        title: 'Hospital Dashboard 1',
-        to: '/dashboard-pages/dashboard-1',
-        icon: 'ri-home-8-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
-    },
-    {
-        title: 'Hospital Dashboard 2',
-        to: '/dashboard-pages/dashboard-2',
-        icon: 'ri-briefcase-4-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
-    },
-    {
-        title: 'Patient Dashboard',
-        to: '/dashboard-pages/patient-dashboard',
-        icon: 'ri-briefcase-4-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
-    },
-    {
-        title: 'Covid-19 Dashboard',
-        to: '/dashboard-pages/dashboard-4',
-        icon: 'ri-hospital-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
+        title: 'Dashboard',
+        content: [
+            {
+                title: 'Doctor Dashboard',
+                to: '/',
+                icon: 'ri-hospital-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Hospital Dashboard 1',
+                to: '/dashboard-pages/dashboard-1',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Hospital Dashboard 2',
+                to: '/dashboard-pages/dashboard-2',
+                icon: 'ri-briefcase-4-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Patient Dashboard',
+                to: '/dashboard-pages/patient-dashboard',
+                icon: 'ri-briefcase-4-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'Covid-19 Dashboard',
+                to: '/dashboard-pages/dashboard-4',
+                icon: 'ri-hospital-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            }
+        ]
     },
     {
         divider: true
     },
     {
         isHeader: true,
-        title: 'Apps'
-    },
-    {
-        title: 'Email',
-        icon: 'ri-mail-open-fill',
+        title: 'Apps',
         content: [
             {
-                title: 'Inbox',
-                to: '/email/inbox',
-                icon: 'ri-inbox-fill',
+                title: 'Email',
+                icon: 'ri-mail-open-fill',
+                content: [
+                    {
+                        title: 'Inbox',
+                        to: '/email/inbox',
+                        icon: 'ri-inbox-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Email Compose',
+                        to: '/email/email-compose',
+                        icon: 'ri-edit-2-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
+            },
+            {
+                title: 'Doctor',
+                icon: 'doctor-svg',
+                content: [
+                    {
+                        title: 'All Doctor',
+                        to: '/doctor/doctor-list',
+                        icon: 'ri-file-list-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Add Doctor',
+                        to: '/doctor/add-doctor',
+                        icon: 'ri-user-add-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Doctor Profile',
+                        to: '/doctor/doctor-profile',
+                        icon: 'ri-profile-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Edit Doctor',
+                        to: '/doctor/edit-doctor',
+                        icon: 'ri-file-edit-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
+            },
+            {
+                title: 'Calendar',
+                to: '/calendar',
+                icon: 'ri-calendar-2-line',
                 addPermission: true,
                 editPermission: true,
                 deletePermission: true,
                 viewPermission: true
             },
             {
-                title: 'Email Compose',
-                to: '/email/email-compose',
-                icon: 'ri-edit-2-fill',
+                title: 'Chat',
+                to: '/chat',
+                icon: 'ri-message-fill',
                 addPermission: true,
                 editPermission: true,
                 deletePermission: true,
                 viewPermission: true
             }
         ]
-    },
-    {
-        title: 'Doctor',
-        icon: 'doctor-svg',
-        content: [
-            {
-                title: 'All Doctor',
-                to: '/doctor/doctor-list',
-                icon: 'ri-file-list-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Add Doctor',
-                to: '/doctor/add-doctor',
-                icon: 'ri-user-add-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Doctor Profile',
-                to: '/doctor/doctor-profile',
-                icon: 'ri-profile-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Edit Doctor',
-                to: '/doctor/edit-doctor',
-                icon: 'ri-file-edit-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Calendar',
-        to: '/calendar',
-        icon: 'ri-calendar-2-line',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
-    },
-    {
-        title: 'Chat',
-        to: '/chat',
-        icon: 'ri-message-fill',
-        addPermission: true,
-        editPermission: true,
-        deletePermission: true,
-        viewPermission: true
     },
     {
         divider: true
     },
     {
         isHeader: true,
-        title: 'Components'
-    },
-    {
-        title: 'UI Elements',
-        icon: 'ri-apps-fill',
+        title: 'Components',
         content: [
             {
-                title: 'Colors',
-                to: '/ui-elements/colors',
-                icon: 'ri-font-color',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'UI Elements',
+                icon: 'ri-apps-fill',
+                content: [
+                    {
+                        title: 'Colors',
+                        to: '/ui-elements/colors',
+                        icon: 'ri-font-color',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Typography',
+                        to: '/ui-elements/typography',
+                        icon: 'ri-text',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Alerts',
+                        to: '/ui-elements/alerts',
+                        icon: 'ri-alert-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Badges',
+                        to: '/ui-elements/badges',
+                        icon: 'ri-building-3-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Breadcrumb',
+                        to: '/ui-elements/breadcrumb',
+                        icon: 'ri-guide-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Buttons',
+                        to: '/ui-elements/buttons',
+                        icon: 'ri-checkbox-blank-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Cards',
+                        to: '/ui-elements/cards',
+                        icon: 'ri-bank-card-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Carousel',
+                        to: '/ui-elements/carousel',
+                        icon: 'ri-slideshow-4-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Video',
+                        to: '/ui-elements/video',
+                        icon: 'ri-movie-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Grid',
+                        to: '/ui-elements/grid',
+                        icon: 'ri-grid-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Images',
+                        to: '/ui-elements/images',
+                        icon: 'ri-image-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'List Group',
+                        to: '/ui-elements/list-group',
+                        icon: 'ri-file-list-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Modal',
+                        to: '/ui-elements/modal',
+                        icon: 'ri-checkbox-blank-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Notifications',
+                        to: '/ui-elements/notifications',
+                        icon: 'ri-notification-3-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Pagination',
+                        to: '/ui-elements/pagination',
+                        icon: 'ri-more-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Popovers',
+                        to: '/ui-elements/popovers',
+                        icon: 'ri-folder-shield-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Progressbars',
+                        to: '/ui-elements/progressbars',
+                        icon: 'ri-battery-low-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Tabs',
+                        to: '/ui-elements/tabs',
+                        icon: 'ri-database-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Tooltips',
+                        to: '/ui-elements/tooltips',
+                        icon: 'ri-record-mail-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Typography',
-                to: '/ui-elements/typography',
-                icon: 'ri-text',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Alerts',
-                to: '/ui-elements/alerts',
-                icon: 'ri-alert-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Badges',
-                to: '/ui-elements/badges',
-                icon: 'ri-building-3-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Breadcrumb',
-                to: '/ui-elements/breadcrumb',
-                icon: 'ri-guide-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Buttons',
-                to: '/ui-elements/buttons',
-                icon: 'ri-checkbox-blank-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Cards',
-                to: '/ui-elements/cards',
-                icon: 'ri-bank-card-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Carousel',
-                to: '/ui-elements/carousel',
-                icon: 'ri-slideshow-4-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Video',
-                to: '/ui-elements/video',
-                icon: 'ri-movie-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Grid',
-                to: '/ui-elements/grid',
-                icon: 'ri-grid-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Images',
-                to: '/ui-elements/images',
-                icon: 'ri-image-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'List Group',
-                to: '/ui-elements/list-group',
-                icon: 'ri-file-list-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Modal',
-                to: '/ui-elements/modal',
-                icon: 'ri-checkbox-blank-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Notifications',
-                to: '/ui-elements/notifications',
-                icon: 'ri-notification-3-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Pagination',
-                to: '/ui-elements/pagination',
-                icon: 'ri-more-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Popovers',
-                to: '/ui-elements/popovers',
-                icon: 'ri-folder-shield-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Progressbars',
-                to: '/ui-elements/progressbars',
-                icon: 'ri-battery-low-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Tabs',
-                to: '/ui-elements/tabs',
-                icon: 'ri-database-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Tooltips',
-                to: '/ui-elements/tooltips',
-                icon: 'ri-record-mail-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Forms',
-        icon: 'ri-device-fill',
-        content: [
-            {
-                title: 'Form Elements',
-                to: '/forms/form-elements',
-                icon: 'ri-tablet-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Form Validation',
-                to: '/forms/form-validations',
+                title: 'Forms',
                 icon: 'ri-device-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                content: [
+                    {
+                        title: 'Form Elements',
+                        to: '/forms/form-elements',
+                        icon: 'ri-tablet-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Form Validation',
+                        to: '/forms/form-validations',
+                        icon: 'ri-device-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Form Switch',
+                        to: '/forms/form-switch',
+                        icon: 'ri-toggle-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Form Checkbox',
+                        to: '/forms/form-checkbox',
+                        icon: 'ri-chat-check-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Form Radio',
+                        to: '/forms/form-radio',
+                        icon: 'ri-radio-button-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Form Switch',
-                to: '/forms/form-switch',
-                icon: 'ri-toggle-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'Form Wizard',
+                icon: 'ri-file-word-fill',
+                content: [
+                    {
+                        title: 'Simple Wizard',
+                        to: '/wizard/simple-wizard',
+                        icon: 'ri-anticlockwise-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Validate Wizard',
+                        to: '/wizard/validate-wizard',
+                        icon: 'ri-anticlockwise-2-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Vertical Wizard',
+                        to: '/wizard/vertical-wizard',
+                        icon: 'ri-clockwise-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Form Checkbox',
-                to: '/forms/form-checkbox',
-                icon: 'ri-chat-check-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Form Radio',
-                to: '/forms/form-radio',
-                icon: 'ri-radio-button-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Form Wizard',
-        icon: 'ri-file-word-fill',
-        content: [
-            {
-                title: 'Simple Wizard',
-                to: '/wizard/simple-wizard',
-                icon: 'ri-anticlockwise-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Validate Wizard',
-                to: '/wizard/validate-wizard',
-                icon: 'ri-anticlockwise-2-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Vertical Wizard',
-                to: '/wizard/vertical-wizard',
-                icon: 'ri-clockwise-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Table',
-        icon: 'ri-table-fill',
-        content: [
-            {
-                title: 'Basic Tables',
-                to: '/tables/basic-table',
+                title: 'Table',
                 icon: 'ri-table-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                content: [
+                    {
+                        title: 'Basic Tables',
+                        to: '/tables/basic-table',
+                        icon: 'ri-table-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Data Tables',
+                        to: '/tables/data-table',
+                        icon: 'ri-table-2',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Editable Tables',
+                        to: '/tables/editable-table',
+                        icon: 'ri-archive-drawer-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Data Tables',
-                to: '/tables/data-table',
-                icon: 'ri-table-2',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'Charts',
+                icon: 'ri-bar-chart-2-fill',
+                content: [
+                    {
+                        title: 'Chart Page',
+                        to: '/charts/chart-page',
+                        icon: 'ri-file-chart-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'ECharts',
+                        to: '/charts/e-chart',
+                        icon: 'ri-bar-chart-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Am Charts',
+                        to: '/charts/chart-am',
+                        icon: 'ri-bar-chart-box-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Apex Chart',
+                        to: '/charts/apex-chart',
+                        icon: 'ri-bar-chart-box-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Editable Tables',
-                to: '/tables/editable-table',
-                icon: 'ri-archive-drawer-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Charts',
-        icon: 'ri-bar-chart-2-fill',
-        content: [
-            {
-                title: 'Chart Page',
-                to: '/charts/chart-page',
-                icon: 'ri-file-chart-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'ECharts',
-                to: '/charts/e-chart',
-                icon: 'ri-bar-chart-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Am Charts',
-                to: '/charts/chart-am',
-                icon: 'ri-bar-chart-box-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Apex Chart',
-                to: '/charts/apex-chart',
-                icon: 'ri-bar-chart-box-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Icons',
-        icon: 'ri-bar-chart-2-fill',
-        content: [
-            {
-                title: 'Dripicons',
-                to: '/icons/dripicons',
-                icon: 'ri-stack-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Font Awesome 5',
-                to: '/icons/fontawesome-5',
-                icon: 'ri-facebook-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Line Awesome',
-                to: '/icons/line-awesome',
-                icon: 'ri-keynote-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Remixicon',
-                to: '/icons/remixicon',
-                icon: 'ri-remixicon-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Unicons',
-                to: '/icons/unicons',
-                icon: 'ri-underline',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'Icons',
+                icon: 'ri-bar-chart-2-fill',
+                content: [
+                    {
+                        title: 'Dripicons',
+                        to: '/icons/dripicons',
+                        icon: 'ri-stack-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Font Awesome 5',
+                        to: '/icons/fontawesome-5',
+                        icon: 'ri-facebook-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Line Awesome',
+                        to: '/icons/line-awesome',
+                        icon: 'ri-keynote-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Remixicon',
+                        to: '/icons/remixicon',
+                        icon: 'ri-remixicon-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Unicons',
+                        to: '/icons/unicons',
+                        icon: 'ri-underline',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             }
         ]
     },
@@ -555,167 +563,169 @@ export const MenuListNew = [
     },
     {
         isHeader: true,
-        title: 'Pages'
-    },
-    {
-        title: 'Authentication',
-        icon: 'ri-server-fill',
+        title: 'Pages',
         content: [
             {
-                title: 'Login',
-                to: '/auth/sign-in',
-                icon: 'ri-login-box-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'Authentication',
+                icon: 'ri-server-fill',
+                content: [
+                    {
+                        title: 'Login',
+                        to: '/auth/sign-in',
+                        icon: 'ri-login-box-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Register',
+                        to: '/auth/sign-up',
+                        icon: 'ri-logout-box-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Recover Password',
+                        to: '/auth/recover-password',
+                        icon: 'ri-record-mail-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Confirm Mail',
+                        to: '/auth/confirm-mail',
+                        icon: 'ri-chat-check-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Lock Screen',
+                        to: '/auth/lock-screen',
+                        icon: 'ri-file-lock-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Register',
-                to: '/auth/sign-up',
-                icon: 'ri-logout-box-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'Maps',
+                icon: 'ri-map-pin-2-fill',
+                content: [
+                    {
+                        title: 'Google Map',
+                        to: '/masters/google-map',
+                        icon: 'ri-google-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             },
             {
-                title: 'Recover Password',
-                to: '/auth/recover-password',
-                icon: 'ri-record-mail-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Confirm Mail',
-                to: '/auth/confirm-mail',
-                icon: 'ri-chat-check-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Lock Screen',
-                to: '/auth/lock-screen',
-                icon: 'ri-file-lock-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Maps',
-        icon: 'ri-map-pin-2-fill',
-        content: [
-            {
-                title: 'Google Map',
-                to: '/maps/google-map',
-                icon: 'ri-google-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            }
-        ]
-    },
-    {
-        title: 'Extra Pages',
-        icon: 'ri-folders-fill',
-        content: [
-            {
-                title: 'Timeline',
-                to: '/extra-pages/pages-timeline',
-                icon: 'ri-map-pin-time-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Invoice',
-                to: '/extra-pages/pages-invoice',
-                icon: 'ri-question-answer-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Blank Page',
-                to: '/extra-pages/blank-page',
-                icon: 'ri-checkbox-blank-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Error 404',
-                to: '/extra-pages/pages-error-404',
-                icon: 'ri-error-warning-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Error 500',
-                to: '/extra-pages/pages-error-500',
-                icon: 'ri-error-warning-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Pricing',
-                to: '/extra-pages/pages-pricing',
-                icon: 'ri-price-tag-3-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Pricing 1',
-                to: '/extra-pages/pages-pricing-one',
-                icon: 'ri-price-tag-2-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Maintenance',
-                to: '/extra-pages/pages-maintenance',
-                icon: 'ri-git-repository-commits-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Coming Soon',
-                to: '/extra-pages/pages-comingsoon',
-                icon: 'ri-run-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Faq',
-                to: '/extra-pages/pages-faq',
-                icon: 'ri-compasses-2-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
+                title: 'Extra Pages',
+                icon: 'ri-folders-fill',
+                content: [
+                    {
+                        title: 'Timeline',
+                        to: '/extra-pages/pages-timeline',
+                        icon: 'ri-map-pin-time-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Invoice',
+                        to: '/extra-pages/pages-invoice',
+                        icon: 'ri-question-answer-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Blank Page',
+                        to: '/extra-pages/blank-page',
+                        icon: 'ri-checkbox-blank-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Error 404',
+                        to: '/extra-pages/pages-error-404',
+                        icon: 'ri-error-warning-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Error 500',
+                        to: '/extra-pages/pages-error-500',
+                        icon: 'ri-error-warning-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Pricing',
+                        to: '/extra-pages/pages-pricing',
+                        icon: 'ri-price-tag-3-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Pricing 1',
+                        to: '/extra-pages/pages-pricing-one',
+                        icon: 'ri-price-tag-2-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Maintenance',
+                        to: '/extra-pages/pages-maintenance',
+                        icon: 'ri-git-repository-commits-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Coming Soon',
+                        to: '/extra-pages/pages-comingsoon',
+                        icon: 'ri-run-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Faq',
+                        to: '/extra-pages/pages-faq',
+                        icon: 'ri-compasses-2-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    }
+                ]
             }
         ]
     },
@@ -783,130 +793,135 @@ const VerticalNav = () => {
         <>
             <ul className="navbar-nav iq-main-menu" id="sidebar-menu">
                 <Accordion bsPrefix="bg-none" onSelect={(e) => setActiveMenu(e)}>
-                    {MenuListNew.map((item, index) => {
-                        if (item.divider) {
+                    {MenuListNew.map((group, groupIndex) => {
+                        if (group.divider) {
                             return (
-                                <li key={`divider-${index}`}>
+                                <li key={`divider-${groupIndex}`}>
                                     <hr className="hr-horizontal" />
                                 </li>
                             );
                         }
 
-                        if (item.isHeader) {
+                        if (group.isHeader) {
                             return (
-                                <Nav.Item as="li" className="static-item ms-2" key={`header-${index}`}>
-                                    <Link
-                                        className="nav-link static-item disabled text-start"
-                                        tabIndex="-1"
-                                        to="#"
-                                    >
-                                        <span className="default-icon">{item.title}</span>
-                                        <OverlayTrigger
-                                            key={item.title}
-                                            placement="right"
-                                            overlay={
-                                                <Tooltip id={`tooltip-header-${index}`}>{item.title}</Tooltip>
-                                            }
+                                <React.Fragment key={`group-${groupIndex}`}>
+                                    <Nav.Item as="li" className="static-item ms-2">
+                                        <Link
+                                            className="nav-link static-item disabled text-start"
+                                            tabIndex="-1"
+                                            to="#"
                                         >
-                                            <span className="mini-icon">-</span>
-                                        </OverlayTrigger>
-                                    </Link>
-                                </Nav.Item>
-                            );
-                        }
-
-                        const hasContent = item.content && item.content.length > 0;
-
-                        if (hasContent) {
-                            const isSubActive = item.content.some((sub) => location.pathname === sub.to);
-                            return (
-                                <Accordion.Item
-                                    as="li"
-                                    key={index}
-                                    className={`nav-item ${active === item.title || isSubActive ? "active" : ""}`}
-                                    onClick={() => setActive(item.title)}
-                                >
-                                    <div className="colors">
-                                        <CustomToggle
-                                            eventKey={item.title}
-                                            activeClass={isSubActive}
-                                            onClick={(activeKey) => setActiveMenu(activeKey)}
-                                        >
+                                            <span className="default-icon">{group.title}</span>
                                             <OverlayTrigger
-                                                key={item.title}
+                                                key={group.title}
                                                 placement="right"
                                                 overlay={
-                                                    <Tooltip id={`tooltip-${index}`}>{item.title}</Tooltip>
+                                                    <Tooltip id={`tooltip-header-${groupIndex}`}>{group.title}</Tooltip>
                                                 }
                                             >
-                                                {renderIcon(item.icon)}
+                                                <span className="mini-icon">-</span>
                                             </OverlayTrigger>
-                                            <span className="item-name">{item.title}</span>
-                                            <i className="right-icon">
-                                                <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    width="18"
-                                                    className="icon-18"
-                                                    fill="none"
-                                                    viewBox="0 0 24 24"
-                                                    stroke="currentColor"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth="2"
-                                                        d="M9 5l7 7-7 7"
-                                                    />
-                                                </svg>
-                                            </i>
-                                        </CustomToggle>
+                                        </Link>
+                                    </Nav.Item>
 
-                                        <Accordion.Collapse
-                                            eventKey={item.title}
-                                            as="ul"
-                                            className="sub-nav"
-                                            id={item.title}
-                                        >
-                                            <>
-                                                {item.content.map((subItem, subIndex) => (
-                                                    <li key={subIndex}>
-                                                        <Link
-                                                            className={`nav-link ${location.pathname === subItem.to ? "active" : ""
-                                                                }`}
-                                                            to={subItem.to}
+                                    {group.content && group.content.map((item, itemIndex) => {
+                                        const hasSubContent = item.content && item.content.length > 0;
+
+                                        if (hasSubContent) {
+                                            const isSubActive = item.content.some((sub) => location.pathname === sub.to);
+                                            return (
+                                                <Accordion.Item
+                                                    as="li"
+                                                    key={`item-${groupIndex}-${itemIndex}`}
+                                                    className={`nav-item ${active === item.title || isSubActive ? "active" : ""}`}
+                                                    onClick={() => setActive(item.title)}
+                                                >
+                                                    <div className="colors">
+                                                        <CustomToggle
+                                                            eventKey={item.title}
+                                                            activeClass={isSubActive}
+                                                            onClick={(activeKey) => setActiveMenu(activeKey)}
                                                         >
-                                                            <i className={subItem.icon}></i>
-                                                            <span className="item-name">{subItem.title}</span>
-                                                        </Link>
-                                                    </li>
-                                                ))}
-                                            </>
-                                        </Accordion.Collapse>
-                                    </div>
-                                </Accordion.Item>
-                            );
-                        } else {
-                            const isActive = location.pathname === item.to;
-                            return (
-                                <Nav.Item as="li" key={index} className={`${isActive ? "active" : ""}`}>
-                                    <Link
-                                        to={item.to}
-                                        className={`nav-link ${isActive ? "active" : ""}`}
-                                    >
-                                        <OverlayTrigger
-                                            key={item.title}
-                                            placement="right"
-                                            overlay={
-                                                <Tooltip id={`tooltip-${index}`}>{item.title}</Tooltip>
-                                            }
-                                        >
-                                            {renderIcon(item.icon)}
-                                        </OverlayTrigger>
-                                        <span className="item-name">{item.title}</span>
-                                    </Link>
-                                </Nav.Item>
+                                                            <OverlayTrigger
+                                                                key={item.title}
+                                                                placement="right"
+                                                                overlay={
+                                                                    <Tooltip id={`tooltip-${groupIndex}-${itemIndex}`}>{item.title}</Tooltip>
+                                                                }
+                                                            >
+                                                                {renderIcon(item.icon)}
+                                                            </OverlayTrigger>
+                                                            <span className="item-name">{item.title}</span>
+                                                            <i className="right-icon">
+                                                                <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    width="18"
+                                                                    className="icon-18"
+                                                                    fill="none"
+                                                                    viewBox="0 0 24 24"
+                                                                    stroke="currentColor"
+                                                                >
+                                                                    <path
+                                                                        strokeLinecap="round"
+                                                                        strokeLinejoin="round"
+                                                                        strokeWidth="2"
+                                                                        d="M9 5l7 7-7 7"
+                                                                    />
+                                                                </svg>
+                                                            </i>
+                                                        </CustomToggle>
+
+                                                        <Accordion.Collapse
+                                                            eventKey={item.title}
+                                                            as="ul"
+                                                            className="sub-nav"
+                                                            id={item.title}
+                                                        >
+                                                            <>
+                                                                {item.content.map((subItem, subIndex) => (
+                                                                    <li key={subIndex}>
+                                                                        <Link
+                                                                            className={`nav-link ${location.pathname === subItem.to ? "active" : ""
+                                                                                }`}
+                                                                            to={subItem.to}
+                                                                        >
+                                                                            <i className={subItem.icon}></i>
+                                                                            <span className="item-name">{subItem.title}</span>
+                                                                        </Link>
+                                                                    </li>
+                                                                ))}
+                                                            </>
+                                                        </Accordion.Collapse>
+                                                    </div>
+                                                </Accordion.Item>
+                                            );
+                                        } else {
+                                            const isActive = location.pathname === item.to;
+                                            return (
+                                                <Nav.Item as="li" key={`item-${groupIndex}-${itemIndex}`} className={`${isActive ? "active" : ""}`}>
+                                                    <Link
+                                                        to={item.to}
+                                                        className={`nav-link ${isActive ? "active" : ""}`}
+                                                    >
+                                                        <OverlayTrigger
+                                                            key={item.title}
+                                                            placement="right"
+                                                            overlay={
+                                                                <Tooltip id={`tooltip-${groupIndex}-${itemIndex}`}>{item.title}</Tooltip>
+                                                            }
+                                                        >
+                                                            {renderIcon(item.icon)}
+                                                        </OverlayTrigger>
+                                                        <span className="item-name">{item.title}</span>
+                                                    </Link>
+                                                </Nav.Item>
+                                            );
+                                        }
+                                    })}
+                                </React.Fragment>
                             );
                         }
+                        return null;
                     })}
                 </Accordion>
             </ul>

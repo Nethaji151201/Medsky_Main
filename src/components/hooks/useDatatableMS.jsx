@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import $ from "jquery";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 import "datatables.net-bs5";
@@ -61,10 +61,33 @@ const useDataTableMS = ({
   pageSize = 50,
   scrollHeight = null,
   onLoadMore,
+  initialColumnVisibility = null,
+
+  // Compact spacing / minimized heights
+  headerPadding = "6px 10px",
+  rowPadding = "4px 10px",
 }) => {
   // 1. Keep orderedColumns state to manage native HTML5 drag and drop reordering
   const [orderedColumns, setOrderedColumns] = useState(columns);
   const serializedParentColumns = serializeColumns(columns);
+  const serializedInitialVisibility = JSON.stringify(initialColumnVisibility || {});
+
+  const columnVisibilityRef = useRef({});
+  const [columnVisibility, setColumnVisibility] = useState(() => {
+    const initialVis = {};
+    columns.forEach(col => {
+      if (col.data) {
+        if (initialColumnVisibility && initialColumnVisibility[col.data] !== undefined) {
+          initialVis[col.data] = initialColumnVisibility[col.data];
+          columnVisibilityRef.current[col.data] = initialColumnVisibility[col.data];
+        } else {
+          initialVis[col.data] = col.visible !== false;
+          columnVisibilityRef.current[col.data] = col.visible !== false;
+        }
+      }
+    });
+    return initialVis;
+  });
 
   // Calculate S.No and selection columns pinned to the left
   const hasSerialNo = showSerialNo || serialNo;
@@ -73,7 +96,22 @@ const useDataTableMS = ({
   // Sync state if parent columns prop changes
   useEffect(() => {
     setOrderedColumns(columns);
-  }, [serializedParentColumns]);
+    const initialVis = {};
+    columns.forEach(col => {
+      if (col.data) {
+        if (columnVisibilityRef.current[col.data] !== undefined) {
+          initialVis[col.data] = columnVisibilityRef.current[col.data];
+        } else if (initialColumnVisibility && initialColumnVisibility[col.data] !== undefined) {
+          initialVis[col.data] = initialColumnVisibility[col.data];
+          columnVisibilityRef.current[col.data] = initialColumnVisibility[col.data];
+        } else {
+          initialVis[col.data] = col.visible !== false;
+          columnVisibilityRef.current[col.data] = col.visible !== false;
+        }
+      }
+    });
+    setColumnVisibility(initialVis);
+  }, [serializedParentColumns, serializedInitialVisibility]);
 
   // 2. Ref-wrap volatile callbacks to prevent React state re-render cycles from destroying the table
   const onSelectionChangeRef = useRef(onSelectionChange);
@@ -87,6 +125,14 @@ const useDataTableMS = ({
   useEffect(() => { onLoadMoreRef.current = onLoadMore; }, [onLoadMore]);
   useEffect(() => { apiFunctionRef.current = apiFunction; }, [apiFunction]);
   useEffect(() => { actionCallbackRef.current = actionCallback; }, [actionCallback]);
+
+  // Dynamically set CSS variables on tableRef element for spacing
+  useEffect(() => {
+    if (tableRef && tableRef.current) {
+      tableRef.current.style.setProperty("--dt-header-padding", headerPadding);
+      tableRef.current.style.setProperty("--dt-row-padding", rowPadding);
+    }
+  }, [tableRef, headerPadding, rowPadding]);
 
   // 3. Infinite Scroll State
   const isServerInfinite = enableInfiniteScroll && typeof apiFunction === "function";
@@ -106,7 +152,6 @@ const useDataTableMS = ({
   // 4. Selection State preservation
   const selectedRowIdsRef = useRef(new Set());
   const columnWidthsRef = useRef({});
-  const columnVisibilityRef = useRef({});
 
   // Helper to get unique row ID
   const getRowId = (row) => {
@@ -203,6 +248,7 @@ const useDataTableMS = ({
       style.innerHTML = `
         /* Scoped light shade for table headers */
         table.dataTable.dt-ms-table thead th {
+          padding: var(--dt-header-padding, 6px 10px) !important;
           background-color: #f8f9fa !important;
           color: #495057 !important;
           font-weight: 600 !important;
@@ -214,6 +260,14 @@ const useDataTableMS = ({
           background-color: #1a1e29 !important;
           color: #f8f9fa !important;
           border-bottom: 2px solid #2d3748 !important;
+        }
+
+        /* Scoped row height/padding and cursor pointer */
+        table.dataTable.dt-ms-table tbody td {
+          padding: var(--dt-row-padding, 6px 10px) !important;
+        }
+        table.dataTable.dt-ms-table tbody tr {
+          cursor: pointer !important;
         }
 
         /* Hide sorting icons on utility columns (selection checkbox and S.No) */
@@ -968,7 +1022,7 @@ const useDataTableMS = ({
                     position: "absolute",
                     display: "block",
                   });
-                  
+
                   lastInsertIdx = insertIdx;
                 } else {
                   $line.css("display", "none");
@@ -1008,7 +1062,7 @@ const useDataTableMS = ({
 
         setOrderedColumns((prev) => {
           const nextColumns = reorderArray(prev, fromUserIdx, toUserIdx);
-          
+
           const visualColumnsOrder = nextColumns.map((col, idx) => ({
             title: col.title,
             dataKey: col.data,
@@ -1209,6 +1263,7 @@ const useDataTableMS = ({
 
           datatable.columns.adjust();
           populateColumnList();
+          setColumnVisibility({ ...columnVisibilityRef.current });
         });
 
         // Toggle all columns visibility
@@ -1233,6 +1288,7 @@ const useDataTableMS = ({
 
           datatable.columns.adjust();
           populateColumnList();
+          setColumnVisibility({ ...columnVisibilityRef.current });
         });
 
         // Reset columns visibility
@@ -1257,6 +1313,7 @@ const useDataTableMS = ({
 
           datatable.columns.adjust();
           populateColumnList();
+          setColumnVisibility({ ...columnVisibilityRef.current });
         });
 
         // Search columns in dropdown
@@ -1591,7 +1648,15 @@ const useDataTableMS = ({
         $(isColumnHiddenClass).on("click", function (e) {
           e.preventDefault();
           const column = datatable.column($(this).attr("data-column"));
-          column.visible(!column.visible());
+          const isVisible = !column.visible();
+          column.visible(isVisible);
+
+          const idx = parseInt($(this).attr("data-column"));
+          const colObj = finalColumns[idx];
+          if (colObj && colObj.data) {
+            columnVisibilityRef.current[colObj.data] = isVisible;
+            setColumnVisibility({ ...columnVisibilityRef.current });
+          }
         });
       }
 
@@ -1693,6 +1758,27 @@ const useDataTableMS = ({
       }
     }
   }, [displayLoading, displayData, tableRef]);
+  const visibleColumns = useMemo(() => {
+    return orderedColumns.filter(col => col.data && columnVisibility[col.data] !== false);
+  }, [orderedColumns, columnVisibility]);
+
+  const hiddenColumns = useMemo(() => {
+    return orderedColumns.filter(col => col.data && columnVisibility[col.data] === false);
+  }, [orderedColumns, columnVisibility]);
+
+  const allColumns = useMemo(() => {
+    return orderedColumns.map(col => ({
+      ...col,
+      visible: columnVisibility[col.data] !== false
+    }));
+  }, [orderedColumns, columnVisibility]);
+
+  return {
+    columnVisibility,
+    visibleColumns,
+    hiddenColumns,
+    allColumns
+  };
 };
 
 export default useDataTableMS;

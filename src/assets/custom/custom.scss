@@ -821,3 +821,19 @@ body[data-rr-ui-modal-open] {
     margin: 1.25rem 0;
     width: 100%;
 }
+
+// Fix page content low showing scrollbar issue
+.main-content.content-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    .content-inner {
+        flex: 1 0 auto;
+        min-height: unset !important;
+    }
+
+    .footer {
+        flex-shrink: 0;
+    }
+}

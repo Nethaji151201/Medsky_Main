@@ -9,10 +9,11 @@ const CommonAutocomplete = ({
   options = [], // Can be array of strings or objects: { label: '...', value: '...' }
   value = "",
   onChange, // Callback when an option is selected: (value, option) => {}
+  onChangeJson, // Callback when an option is selected: (jsonString) => {}
   onInputChange, // Callback when text input changes
   className = "",
   width = "100%",
-  height = "42px",
+  height = "36px",
   error,
   required,
   disabled,
@@ -117,6 +118,9 @@ const CommonAutocomplete = ({
     setHighlightedIndex(-1);
     if (onChange) {
       onChange(optionValue, option);
+    }
+    if (onChangeJson) {
+      onChangeJson(JSON.stringify(option));
     }
   };
 

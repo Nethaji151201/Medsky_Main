@@ -1,37 +1,33 @@
 import React, { useEffect, useState } from "react";
 import { Button } from 'react-bootstrap';
 import CommonTextField from "../../../components/common/textfield";
-import CommonAutocomplete from "../../../components/common/autocomplete";
-import { StatusOption } from "../../../constant";
+import CommonCheckbox from "../../../components/common/checkbox";
 import { saveGlobalType } from "../../../services/Masters/GlobalType";
 
-
 const AddGlobalType = ({
-    globalId,
-    globalTypeData,
+    masterDetails,
+    masterData,
     onSuccess,
     onClose,
 }) => {
     const [typeName, setTypeName] = useState("");
     const [sortOrder, setSortOrder] = useState("");
-    const [status, setStatus] = useState("");
-    // const [parentCategory, setParentCategory] = useState("");
+    const [status, setStatus] = useState(1); // 1 = Active, 0 = Inactive
     const [formErrors, setFormErrors] = useState({});
 
     const handleSaveGlobalType = async (payload) => {
         try {
-            const response = await saveGlobalType(globalId, payload);
+            const response = await saveGlobalType(masterDetails?.value, payload);
             if (response && response.success) {
                 console.log('success');
                 setTypeName("");
                 setSortOrder("");
-                setStatus("2");
+                setStatus(1);
                 setFormErrors({});
                 onSuccess();
             }
-
         } catch (error) {
-            console.error("Error saving global type:", error);
+            console.error("Error saving master data:", error);
         } finally {
             onClose();
         }
@@ -41,13 +37,10 @@ const AddGlobalType = ({
         if (e) e.preventDefault();
         const errors = {};
         if (!typeName.trim()) {
-            errors.typeName = "Global Type Name is required";
+            errors.typeName = "Master Name is required";
         }
         if (!sortOrder) {
             errors.sortOrder = "Sort Order is required";
-        }
-        if (!status) {
-            errors.status = "Status is required";
         }
 
         if (Object.keys(errors).length > 0) {
@@ -56,35 +49,35 @@ const AddGlobalType = ({
         }
 
         const newRecord = {
-            globalTypeName: typeName,
+            masterName: typeName,
             sortOrder: parseInt(sortOrder),
-            status: status || 1
+            status: status
         };
 
         handleSaveGlobalType(newRecord);
     };
 
     useEffect(() => {
-        if (globalTypeData) {
-            setTypeName(globalTypeData.globalTypeName);
-            setSortOrder(globalTypeData.sortOrder);
-            setStatus(globalTypeData.status)
+        if (masterData) {
+            setTypeName(masterData.masterName || "");
+            setSortOrder(masterData.sortOrder !== undefined ? masterData.sortOrder : "");
+            setStatus(masterData.status !== undefined ? masterData.status : 1);
         } else {
             setTypeName("");
             setSortOrder("");
-            setStatus("");
+            setStatus(1); // Default to active for new entries
         }
-    }, [globalTypeData])
+    }, [masterData])
 
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div className="d-flex flex-column gap-3">
-                    {/* CommonTextField with dynamic input custom height and width */}
+                <div className="d-flex flex-column">
+                    {/* CommonTextField for master name input */}
                     <CommonTextField
-                        label="Global Type Name"
+                        label={`${masterDetails?.label} Name`}
                         id="typeNameInput"
-                        placeholder="e.g. Ward Tier"
+                        placeholder={`e.g. ${masterDetails?.label}`}
                         value={typeName}
                         onChange={(e) => setTypeName(e.target.value)}
                         error={formErrors.typeName}
@@ -103,37 +96,20 @@ const AddGlobalType = ({
                         required
                     />
 
-                    {/* CommonAutocomplete with search filtering and custom height */}
-                    {/* <CommonAutocomplete
-                                        label="Parent Category Group"
-                                        id="categoryGroupInput"
-                                        placeholder="Search or type parent category..."
-                                        options={categoryOptions}
-                                        value={parentCategory}
-                                        onChange={(val) => setParentCategory(val)}
-                                        onInputChange={(e) => setParentCategory(e.target.value)}
-                                    /> */}
-
-                    {/* CommonAutocomplete status choice */}
-                    <CommonAutocomplete
-                        label="Status"
-                        id="statusSelectInput"
-                        placeholder="Select status..."
-                        options={StatusOption}
-                        value={status}
-                        onChange={(val) => setStatus(val)}
-                        onInputChange={(e) => setStatus(e.target.value)}
-                        required
-                        error={formErrors.status}
+                    {/* CommonCheckbox status input */}
+                    <CommonCheckbox
+                        label="Active Status"
+                        id="statusCheckbox"
+                        checked={status === 1}
+                        onChange={(e) => setStatus(e.target.checked ? 1 : 0)}
                     />
                 </div>
-                <div className="divider"></div>
-                <div className="d-flex justify-content-end gap-2 w-100">
+                <div className="d-flex justify-content-end gap-2 w-100 bg-body-tertiary p-3 rounded mt-3">
                     <Button variant="outline-secondary" size="sm" onClick={() => onClose()}>
                         Cancel
                     </Button>
-                    <Button variant="primary" size="sm" onClick={handleSubmit}>
-                        Save Type
+                    <Button variant="primary" size="sm" onClick={handleSubmit} className="px-3">
+                        Save
                     </Button>
                 </div>
             </form>

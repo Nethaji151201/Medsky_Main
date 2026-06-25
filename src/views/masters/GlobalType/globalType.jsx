@@ -15,9 +15,10 @@ const GlobalType = () => {
 
     // Form Modal states
     const [showAddModal, setShowAddModal] = useState(false);
-    const [globalId, setGlobalId] = useState(null);
+    const [masterId, setMasterId] = useState(1);
+    const [selectedOptionJson, setSelectedOptionJson] = useState(JSON.stringify({ label: "Patient", value: 1 }));
 
-    const globalOption = [
+    const masterOption = [
         { label: "Patient", value: 1 },
         { label: "Guardian", value: 2 },
         { label: "Gender", value: 3 },
@@ -34,8 +35,8 @@ const GlobalType = () => {
     // Define columns matching the user's specification
     const columns = [
         {
-            data: "globalTypeName",
-            title: "Global Type Name"
+            data: "masterName",
+            title: `${JSON.parse(selectedOptionJson)?.label}`
         },
         {
             data: "sortOrder",
@@ -59,27 +60,27 @@ const GlobalType = () => {
 
     // Premium sample records stored in local React state so they redraw reactively on update
     const [tableData, setTableData] = useState([
-        { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-        { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-        { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-        { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-        { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-        { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-        { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-        { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-        { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-        { globalTypeName: "Diagnostic Specialty", parentCategory: "Clinical", sortOrder: 10, status: 0 }
+        { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+        { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+        { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+        { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+        { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+        { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+        { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+        { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+        { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+        { masterName: "Diagnostic Specialty", parentCategory: "Clinical", sortOrder: 10, status: 0 }
     ]);
 
 
     // Initialize our premium hook with all requested props
-    useDataTableMS({
+    const { columnVisibility, visibleColumns, hiddenColumns, allColumns } = useDataTableMS({
         tableRef: tableRef,
         columns: columns,
         data: tableData,
         isFilterColumn: false, // Enables header-level column filters
         bordered: true,       // Enable premium small grid borders
-        selectable: true,      // Prepend a premium row selection checkbox column
+        selectable: false,      // Prepend a premium row selection checkbox column
         showSerialNo: true,    // Enable serial number column
         onSelectionChange: (rows) => {
             console.log("Selected Rows changed:", rows);
@@ -91,157 +92,172 @@ const GlobalType = () => {
         },
         zebra: true,           // Toggle alternate row grey backgrounds
         isLoading: isLoading,  // Toggle premium loading overlay state
-        emptyMessage: "No global types found", // Scoped empty message
+        emptyMessage: "No master data found", // Scoped empty message
+        initialColumnVisibility: {
+            masterName: true,   // Show on load
+            sortOrder: true,       // Hide on load
+            status: true            // Show on load
+        },
     });
 
+    // Console print the visible and non-visible columns data reactively
+    useEffect(() => {
+        console.log("DataTable Column Visibility Data:", {
+            columnVisibility,
+            visibleColumns,
+            hiddenColumns,
+            allColumns
+        });
+    }, [columnVisibility]);
+
     const setData = () => {
-        if (globalId == 1) {
+        if (masterId == 1) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
             ]);
         }
 
-        if (globalId == 2) {
+        if (masterId == 2) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
             ]);
         }
 
-        if (globalId == 3) {
+        if (masterId == 3) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
             ]);
         }
 
-        if (globalId == 4) {
+        if (masterId == 4) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
             ]);
         }
 
-        if (globalId == 5) {
+        if (masterId == 5) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
             ]);
         }
 
-        if (globalId == 6) {
+        if (masterId == 6) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
             ]);
         }
 
-        if (globalId == 7) {
+        if (masterId == 7) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
             ]);
         }
 
-        if (globalId == 8) {
+        if (masterId == 8) {
             setTableData([
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Diagnostic Specialty", parentCategory: "Clinical", sortOrder: 10, status: 0 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
-                { globalTypeName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
-                { globalTypeName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
-                { globalTypeName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
-                { globalTypeName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
-                { globalTypeName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
-                { globalTypeName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
-                { globalTypeName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
-                { globalTypeName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
-                { globalTypeName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Diagnostic Specialty", parentCategory: "Clinical", sortOrder: 10, status: 0 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
+                { masterName: "Hospital Unit", parentCategory: "Administrative", sortOrder: 1, status: 1 },
+                { masterName: "Specialty Category", parentCategory: "Clinical", sortOrder: 2, status: 1 },
+                { masterName: "Designation Tier", parentCategory: "Administrative", sortOrder: 3, status: 1 },
+                { masterName: "Billing Category", parentCategory: "Financial", sortOrder: 4, status: 0 },
+                { masterName: "Vendor Type", parentCategory: "Operations", sortOrder: 5, status: 1 },
+                { masterName: "DCR Region", parentCategory: "Operations", sortOrder: 6, status: 0 },
+                { masterName: "Account Type", parentCategory: "Financial", sortOrder: 7, status: 1 },
+                { masterName: "Insurance Partner", parentCategory: "Financial", sortOrder: 8, status: 1 },
+                { masterName: "Ward Type", parentCategory: "Clinical", sortOrder: 9, status: 1 },
             ]);
         }
     }
@@ -249,12 +265,12 @@ const GlobalType = () => {
     const getData = async () => {
         try {
             setIsLoading(true);
-            const response = await getGlobalType(globalId);
+            const response = await getGlobalType(masterId);
             if (response && response.success) {
                 setTableData(response.data || []);
             }
         } catch (error) {
-            console.error("Error fetching global types:", error);
+            console.error("Error fetching masters data:", error);
         } finally {
             setData()
             setIsLoading(false);
@@ -262,26 +278,38 @@ const GlobalType = () => {
     }
 
     useEffect(() => {
-        if (globalId) {
-            getData(globalId);
+        if (masterId) {
+            getData(masterId);
         }
-    }, [globalId]);
+    }, [masterId]);
 
     return (
         <div id="page_layout" className="cust-datatable">
             <Row>
                 <Col sm="12">
                     <Card>
-                        <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-2">
-                            <Card.Header.Title className="header-title">
-                                <h4 className="card-title mb-0">Global Type Master</h4>
+                        <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-2 py-1">
+                            <Card.Header.Title className="header-title d-flex align-items-center flex-wrap gap-2">
+                                <h4 className="card-title mb-0 me-3">Master</h4>
+                                <CommonAutocomplete
+                                    id="masterSelectInput"
+                                    placeholder="Select Master..."
+                                    options={masterOption}
+                                    value={masterId}
+                                    onChange={(val) => {
+                                        setMasterId(val)
+                                    }}
+                                    onChangeJson={(json) => {
+                                        console.log(json, "json");
+
+                                        setSelectedOptionJson(json)
+                                    }}
+                                    onInputChange={(e) => setMasterId(e.target.value)}
+                                    width="300px"
+                                    className="pt-1"
+                                />
                             </Card.Header.Title>
                             <div className="d-flex align-items-center gap-3">
-                                {selectedRows.length > 0 && (
-                                    <Badge bg="primary" className="py-2 px-3">
-                                        {selectedRows.length} Row{selectedRows.length > 1 ? "s" : ""} Selected
-                                    </Badge>
-                                )}
 
                                 <Button
                                     variant="primary"
@@ -293,7 +321,7 @@ const GlobalType = () => {
                                     className="d-flex align-items-center gap-1"
                                 >
                                     <i className="ri-add-line"></i>
-                                    Add Global Type
+                                    Add Master
                                 </Button>
 
                                 {/* <Button
@@ -308,18 +336,18 @@ const GlobalType = () => {
                             </div>
                         </Card.Header>
                         <Card.Body>
-                            <p className="text-muted mb-3">
+                            {/* <p className="text-muted mb-3 d-flex align-items-center gap-2">
+                                <span>Master:</span>
                                 <CommonAutocomplete
-                                    label="Global Type"
-                                    id="globalTypeSelectInput"
-                                    placeholder="Select Global Type..."
-                                    options={globalOption}
-                                    value={globalId}
-                                    onChange={(val) => setGlobalId(val)}
-                                    onInputChange={(e) => setGlobalId(e.target.value)}
+                                    id="masterSelectInput"
+                                    placeholder="Select Master..."
+                                    options={masterOption}
+                                    value={masterId}
+                                    onChange={(val) => setMasterId(val)}
+                                    onInputChange={(e) => setMasterId(e.target.value)}
                                     width="300px"
                                 />
-                            </p>
+                            </p> */}
 
                             <div className="table-responsive custom-table-search">
                                 <table
@@ -333,14 +361,14 @@ const GlobalType = () => {
                 </Col>
             </Row>
 
-            {/* Premium Create Global Type Dialog Modal using Common Components */}
+            {/* Premium Create Master Dialog Modal using Common Components */}
             <CommonDialog
                 open={showAddModal}
                 onClose={() => setShowAddModal(false)}
-                title="Create Global Type"
-                maxWidth="lg"
+                title={clickedRow ? `Edit ${JSON.parse(selectedOptionJson)?.label}` : `Create ${JSON.parse(selectedOptionJson)?.label}`}
+                maxWidth="400px"
             >
-                <AddGlobalType globalTypeData={clickedRow} onClose={() => setShowAddModal(false)} onSuccess={() => setShowAddModal(false)} />
+                <AddGlobalType masterDetails={JSON.parse(selectedOptionJson)} masterData={clickedRow} onClose={() => setShowAddModal(false)} onSuccess={() => setShowAddModal(false)} />
             </CommonDialog>
         </div>
     );
