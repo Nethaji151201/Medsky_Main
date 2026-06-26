@@ -2,34 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import CommonTextField from "../../../components/common/textfield";
 import CommonCheckbox from "../../../components/common/checkbox";
-import CommonAutocomplete from "../../../components/common/autocomplete";
 
-const AddArea = ({
-    areaData,
-    cities = [],
+const ClientAddCity = ({
+    cityData,
     onSuccess,
     onClose,
 }) => {
-    const [areaName, setAreaName] = useState("");
     const [cityName, setCityName] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     const [status, setStatus] = useState(1); // 1 = Active, 0 = Inactive
     const [formErrors, setFormErrors] = useState({});
 
-    // Map cities list to options expected by CommonAutocomplete
-    const cityOptions = cities.map(c => ({
-        label: c.cityName,
-        value: c.cityName
-    }));
-
     const handleSubmit = (e) => {
         if (e) e.preventDefault();
         const errors = {};
-        if (!areaName.trim()) {
-            errors.areaName = "Area Name is required";
-        }
-        if (!cityName) {
-            errors.cityName = "City selection is required";
+        if (!cityName.trim()) {
+            errors.cityName = "City Name is required";
         }
         if (!sortOrder) {
             errors.sortOrder = "Sort Order is required";
@@ -41,8 +29,7 @@ const AddArea = ({
         }
 
         const record = {
-            id: areaData ? areaData.id : Date.now(),
-            areaName: areaName,
+            id: cityData ? cityData.id : Date.now(),
             cityName: cityName,
             sortOrder: parseInt(sortOrder),
             status: status,
@@ -52,43 +39,29 @@ const AddArea = ({
     };
 
     useEffect(() => {
-        if (areaData) {
-            setAreaName(areaData.areaName || "");
-            setCityName(areaData.cityName || "");
-            setSortOrder(areaData.sortOrder !== undefined ? areaData.sortOrder : "");
-            setStatus(areaData.status !== undefined ? areaData.status : 1);
+        if (cityData) {
+            setCityName(cityData.cityName || "");
+            setSortOrder(cityData.sortOrder !== undefined ? cityData.sortOrder : "");
+            setStatus(cityData.status !== undefined ? cityData.status : 1);
         } else {
-            setAreaName("");
             setCityName("");
             setSortOrder("");
             setStatus(1);
         }
         setFormErrors({});
-    }, [areaData]);
+    }, [cityData]);
 
     return (
-        <form onSubmit={handleSubmit} id="area-form" noValidate>
+        <form onSubmit={handleSubmit} id="city-form" noValidate>
             <div className="d-flex flex-column gap-3">
                 <CommonTextField
-                    label="Area Name"
-                    id="areaNameInput"
-                    placeholder="e.g. T. Nagar"
-                    value={areaName}
-                    onChange={(e) => setAreaName(e.target.value)}
-                    error={formErrors.areaName}
-                    required
-                />
-
-                <CommonAutocomplete
-                    label="City"
-                    id="citySelectInput"
-                    placeholder="Select City"
-                    options={cityOptions}
+                    label="City Name"
+                    id="cityNameInput"
+                    placeholder="e.g. Chennai"
                     value={cityName}
-                    onChange={(val) => setCityName(val)}
+                    onChange={(e) => setCityName(e.target.value)}
                     error={formErrors.cityName}
                     required
-                    className="mb-0"
                 />
 
                 <CommonTextField
@@ -113,4 +86,4 @@ const AddArea = ({
     );
 };
 
-export default AddArea;
+export default ClientAddCity;

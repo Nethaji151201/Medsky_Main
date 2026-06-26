@@ -4,7 +4,7 @@ import CommonTextField from "../../../components/common/textfield";
 import CommonCheckbox from "../../../components/common/checkbox";
 import CommonAutocomplete from "../../../components/common/autocomplete";
 
-const AddArea = ({
+const ClientAddArea = ({
     areaData,
     cities = [],
     onSuccess,
@@ -113,4 +113,4 @@ const AddArea = ({
     );
 };
 
-export default AddArea;
+export default ClientAddArea;

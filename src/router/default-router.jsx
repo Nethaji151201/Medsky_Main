@@ -108,6 +108,8 @@ import OPList from "../views/patients/OP/opList"
 import DoctersList from "../views/msdocters/doctersList"
 import AreaList from "../views/masters/area/areaList"
 import CityList from "../views/masters/city/cityList"
+import ClientAreaList from "../views/client-master/area/areaList"
+import ClientCityList from "../views/client-master/city/cityList"
 
 export const DefaultRoute = [
   {
@@ -116,7 +118,7 @@ export const DefaultRoute = [
     children: [
       // ------ Masters ------
       {
-        path: '/masters/globalType',
+        path: '/masters',
         element: <GlobalType />
       },
       {
@@ -132,6 +134,7 @@ export const DefaultRoute = [
         path: '/docters/docters-list',
         element: <DoctersList />
       },
+
       // ------ Patients ------
       {
         path: '/patients/patient-list',
@@ -140,6 +143,15 @@ export const DefaultRoute = [
       {
         path: '/patients/op-list',
         element: <OPList />
+      },
+      // ------- Client Master -------
+      {
+        path: '/client-masters/area',
+        element: <ClientAreaList />
+      },
+      {
+        path: '/client-masters/city',
+        element: <ClientCityList />
       },
       //  ------ Dashboard Route ------ 
       {

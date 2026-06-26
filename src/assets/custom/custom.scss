@@ -858,3 +858,57 @@ body[data-rr-ui-modal-open] {
         }
     }
 }
+
+// ----------------------------------------------------
+// Custom Focus (Active) and Hover Design Styles
+// ----------------------------------------------------
+
+/* Standard Focus / Active state for Textfields, Autocompletes, Selects, and Datepickers */
+.cust-form-input .form-control,
+.cust-form-input .form-select,
+.flatpickr-input {
+    border-radius: 8px !important;
+    border: 1px solid #cbd5e1 !important;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+[data-bs-theme="dark"] .cust-form-input .form-control,
+[data-bs-theme="dark"] .cust-form-input .form-select,
+[data-bs-theme="dark"] .flatpickr-input {
+    border-color: #334155 !important;
+}
+
+.cust-form-input .form-control:focus,
+.cust-form-input .form-select:focus,
+.flatpickr-input:focus {
+    border-color: var(--bs-primary, #089bab) !important;
+    box-shadow: 0 0 0 3px rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15) !important;
+    background-color: transparent !important;
+    outline: 0 !important;
+}
+
+/* Autocomplete Suggestion Dropdown List Hover Shadow Feel */
+.autocomplete-container .list-group-item {
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border-radius: 6px !important;
+    margin: 2px 4px !important;
+}
+
+/* Hovering on normal (non-active) items in suggestion dropdown */
+.autocomplete-container .list-group-item:not(.active):hover {
+    background-color: rgba(var(--bs-primary-rgb, 8, 155, 171), 0.08) !important;
+    color: var(--bs-primary, #089bab) !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06), inset 0 0 0 1px rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15) !important;
+    transform: translateY(-1px);
+    z-index: 2;
+}
+
+/* Hovering on active/highlighted items in suggestion dropdown */
+.autocomplete-container .list-group-item.active:hover,
+.autocomplete-container .list-group-item.bg-primary:hover {
+    background-color: var(--bs-primary, #089bab) !important;
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(var(--bs-primary-rgb, 8, 155, 171), 0.24) !important;
+    transform: translateY(-1px);
+    z-index: 2;
+}

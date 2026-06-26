@@ -324,7 +324,7 @@ const GlobalType = () => {
                                     Add Master
                                 </Button>
 
-                                {/* <Button
+                                <Button
                                     variant={isLoading ? "success" : "outline-primary"}
                                     size="sm"
                                     onClick={() => setIsLoading(!isLoading)}
@@ -332,7 +332,7 @@ const GlobalType = () => {
                                 >
                                     <i className={isLoading ? "ri-play-line" : "ri-loader-4-line"}></i>
                                     {isLoading ? "Show Table Data" : "Test Loading State"}
-                                </Button> */}
+                                </Button>
                             </div>
                         </Card.Header>
                         <Card.Body>

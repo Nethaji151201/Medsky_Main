@@ -3,7 +3,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 import useDataTableMS from "../../../components/hooks/useDatatableMS";
 import CommonDialog from "../../../components/common/dialog";
-import AddArea from "./addArea";
+import ClientAddCity from "./addCity";
 
 const initialCitiesData = [
     { id: 1, cityName: "Chennai", sortOrder: 1, status: 1 },
@@ -12,30 +12,17 @@ const initialCitiesData = [
     { id: 4, cityName: "Hyderabad", sortOrder: 4, status: 0 }
 ];
 
-const initialAreasData = [
-    { id: 1, areaName: "T. Nagar", cityName: "Chennai", sortOrder: 1, status: 1 },
-    { id: 2, areaName: "Adyar", cityName: "Chennai", sortOrder: 2, status: 1 },
-    { id: 3, areaName: "Indiranagar", cityName: "Bangalore", sortOrder: 3, status: 1 },
-    { id: 4, areaName: "Koramangala", cityName: "Bangalore", sortOrder: 4, status: 1 },
-    { id: 5, areaName: "Andheri", cityName: "Mumbai", sortOrder: 5, status: 1 }
-];
-
-const AreaList = () => {
+const ClientCityList = () => {
     const tableRef = useRef(null);
-    const [areas, setAreas] = useState(initialAreasData);
-    const [cities] = useState(initialCitiesData);
+    const [cities, setCities] = useState(initialCitiesData);
     const [clickedRow, setClickedRow] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
     // Columns configuration
     const columns = [
         {
-            data: "areaName",
-            title: "Area"
-        },
-        {
             data: "cityName",
-            title: "City"
+            title: "City Name"
         },
         {
             data: "sortOrder",
@@ -61,7 +48,7 @@ const AreaList = () => {
     useDataTableMS({
         tableRef: tableRef,
         columns: columns,
-        data: areas,
+        data: cities,
         bordered: true,
         selectable: false,
         showSerialNo: true,
@@ -70,18 +57,18 @@ const AreaList = () => {
             setShowAddModal(true);
         },
         zebra: true,
-        emptyMessage: "No area records found"
+        emptyMessage: "No city records found"
     });
 
-    const handleSaveArea = (savedArea) => {
+    const handleSaveCity = (savedCity) => {
         if (clickedRow) {
             // Edit mode
-            setAreas((prev) =>
-                prev.map((a) => (a.id === clickedRow.id ? { ...a, ...savedArea } : a))
+            setCities((prev) =>
+                prev.map((c) => (c.id === clickedRow.id ? { ...c, ...savedCity } : c))
             );
         } else {
             // Add mode
-            setAreas((prev) => [...prev, savedArea]);
+            setCities((prev) => [...prev, savedCity]);
         }
         setShowAddModal(false);
     };
@@ -93,7 +80,7 @@ const AreaList = () => {
                     <Card>
                         <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
                             <Card.Header.Title className="header-title d-flex align-items-center flex-wrap gap-2">
-                                <h4 className="card-title mb-0">Areas</h4>
+                                <h4 className="card-title mb-0">Cities</h4>
                             </Card.Header.Title>
                             <div className="d-flex align-items-center gap-3">
                                 <Button
@@ -106,7 +93,7 @@ const AreaList = () => {
                                     className="d-flex align-items-center gap-1"
                                 >
                                     <i className="ri-add-line"></i>
-                                    Add Area
+                                    Add City
                                 </Button>
                             </div>
                         </Card.Header>
@@ -123,11 +110,11 @@ const AreaList = () => {
                 </Col>
             </Row>
 
-            {/* Create/Edit Area Dialog Modal */}
+            {/* Create/Edit City Dialog Modal */}
             <CommonDialog
                 open={showAddModal}
                 onClose={() => setShowAddModal(false)}
-                title={clickedRow ? "Edit Area" : "Add Area"}
+                title={clickedRow ? "Edit City" : "Add City"}
                 footer={
                     <div className="d-flex justify-content-end gap-3 w-100">
                         <Button
@@ -140,7 +127,7 @@ const AreaList = () => {
                         </Button>
                         <Button
                             type="submit"
-                            form="area-form"
+                            form="city-form"
                             variant="primary"
                             className="px-4"
                             style={{ minWidth: "120px", height: "38px" }}
@@ -150,15 +137,14 @@ const AreaList = () => {
                     </div>
                 }
             >
-                <AddArea
-                    areaData={clickedRow}
-                    cities={cities}
+                <ClientAddCity
+                    cityData={clickedRow}
                     onClose={() => setShowAddModal(false)}
-                    onSuccess={handleSaveArea}
+                    onSuccess={handleSaveCity}
                 />
             </CommonDialog>
         </div>
     );
 };
 
-export default AreaList;
+export default ClientCityList;

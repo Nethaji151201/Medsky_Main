@@ -3,7 +3,7 @@ import { Row, Col, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 import useDataTableMS from "../../../components/hooks/useDatatableMS";
 import CommonDialog from "../../../components/common/dialog";
-import AddArea from "./addArea";
+import ClientAddArea from "./addArea";
 
 const initialCitiesData = [
     { id: 1, cityName: "Chennai", sortOrder: 1, status: 1 },
@@ -20,7 +20,7 @@ const initialAreasData = [
     { id: 5, areaName: "Andheri", cityName: "Mumbai", sortOrder: 5, status: 1 }
 ];
 
-const AreaList = () => {
+const ClientAreaList = () => {
     const tableRef = useRef(null);
     const [areas, setAreas] = useState(initialAreasData);
     const [cities] = useState(initialCitiesData);
@@ -150,7 +150,7 @@ const AreaList = () => {
                     </div>
                 }
             >
-                <AddArea
+                <ClientAddArea
                     areaData={clickedRow}
                     cities={cities}
                     onClose={() => setShowAddModal(false)}
@@ -161,4 +161,4 @@ const AreaList = () => {
     );
 };
 
-export default AreaList;
+export default ClientAreaList;

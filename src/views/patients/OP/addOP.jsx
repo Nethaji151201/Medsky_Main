@@ -562,7 +562,7 @@ const AddOP = ({ clickedRow, onClose, onSave }) => {
                                         options={["Mr.", "Mrs.", "Ms.", "Dr."]}
                                         value={patientTitle}
                                         onChange={(val) => setPatientTitle(val)}
-                                        width="90px"
+                                        width="110px"
                                         className="mb-0 autocomplete-select-input"
                                     />
                                     <CommonTextField
@@ -608,7 +608,7 @@ const AddOP = ({ clickedRow, onClose, onSave }) => {
                                     Date of Birth & Age <span className="text-danger">*</span>
                                 </Form.Label>
                                 <div className="split-field-container mt-1">
-                                    <div style={{ width: "95px" }}>
+                                    <div style={{ width: "110px" }}>
                                         <CommonTextField
                                             id="age"
                                             placeholder="Age"
@@ -689,7 +689,7 @@ const AddOP = ({ clickedRow, onClose, onSave }) => {
                                         options={["Father", "Mother", "Spouse", "Guardian"]}
                                         value={guardianRelationship}
                                         onChange={(val) => setGuardianRelationship(val)}
-                                        width="115px"
+                                        width="110px"
                                         className="mb-0 autocomplete-select-input"
                                     />
                                     <CommonTextField

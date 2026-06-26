@@ -289,7 +289,6 @@ const PatientsList = () => {
                                             placeholder="Search UHID..."
                                             value={filters.uhid}
                                             onChange={(e) => setFilters(prev => ({ ...prev, uhid: e.target.value }))}
-                                            height="36px"
                                         />
                                     </Col>
                                     <Col md="3">
@@ -299,7 +298,6 @@ const PatientsList = () => {
                                             placeholder="Search Patient Name..."
                                             value={filters.patientName}
                                             onChange={(e) => setFilters(prev => ({ ...prev, patientName: e.target.value }))}
-                                            height="36px"
                                         />
                                     </Col>
                                     {/* <Col md="4">
@@ -309,7 +307,7 @@ const PatientsList = () => {
                                             placeholder="Search Guardian Name..."
                                             value={filters.guardianName}
                                             onChange={(e) => setFilters(prev => ({ ...prev, guardianName: e.target.value }))}
-                                            height="36px"
+                                        
                                         />
                                     </Col> */}
                                     <Col md="3">
@@ -319,7 +317,6 @@ const PatientsList = () => {
                                             placeholder="Search Mobile No..."
                                             value={filters.mobileNumber}
                                             onChange={(e) => setFilters(prev => ({ ...prev, mobileNumber: e.target.value }))}
-                                            height="36px"
                                         />
                                     </Col>
                                     {/* <Col md="4">
@@ -329,7 +326,7 @@ const PatientsList = () => {
                                             placeholder="Search Landline No..."
                                             value={filters.landlineNumber}
                                             onChange={(e) => setFilters(prev => ({ ...prev, landlineNumber: e.target.value }))}
-                                            height="36px"
+                                        
                                         />
                                     </Col> */}
                                     <Col md="3">
@@ -339,7 +336,6 @@ const PatientsList = () => {
                                             placeholder="Search Address..."
                                             value={filters.address}
                                             onChange={(e) => setFilters(prev => ({ ...prev, address: e.target.value }))}
-                                            height="36px"
                                         />
                                     </Col>
                                 </Row>

@@ -8,8 +8,8 @@ export const MenuListNew = [
         title: 'Masters',
         content: [
             {
-                title: 'Global Type',
-                to: '/masters/globalType',
+                title: 'Masters',
+                to: '/masters',
                 icon: 'ri-home-8-fill',
                 addPermission: true,
                 editPermission: true,
@@ -38,6 +38,30 @@ export const MenuListNew = [
     },
     {
         isHeader: true,
+        title: 'Client Masters',
+        content: [
+            {
+                title: 'Area',
+                to: '/client-masters/area',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+            {
+                title: 'City',
+                to: '/client-masters/city',
+                icon: 'ri-home-8-fill',
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+        ]
+    },
+    {
+        isHeader: true,
         title: 'Docters',
         content: [
             {
@@ -56,7 +80,7 @@ export const MenuListNew = [
         title: 'Patients',
         content: [
             {
-                title: 'Patient List',
+                title: 'Patients',
                 to: '/patients/patient-list',
                 icon: 'ri-home-8-fill',
                 addPermission: true,
@@ -65,7 +89,7 @@ export const MenuListNew = [
                 viewPermission: true
             },
             {
-                title: 'OP List',
+                title: 'Out Patients',
                 to: '/patients/op-list',
                 icon: 'ri-home-8-fill',
                 addPermission: true,

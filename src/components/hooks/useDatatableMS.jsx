@@ -42,6 +42,7 @@ const useDataTableMS = ({
   isFooter = false,
   isMultilang = false,
   bordered = false, // Dynamic and optional border parameter
+  columnReorder = true,
 
   // Selection & Row interaction
   isLoading = false,
@@ -242,10 +243,13 @@ const useDataTableMS = ({
 
   useEffect(() => {
     // 1. Inject styles programmatically (completely scoped to .dt-ms-table and .dt-ms-instance)
-    if (!document.getElementById("dt-col-resizer-style")) {
-      const style = document.createElement("style");
+    let style = document.getElementById("dt-col-resizer-style");
+    if (!style) {
+      style = document.createElement("style");
       style.id = "dt-col-resizer-style";
-      style.innerHTML = `
+      document.head.appendChild(style);
+    }
+    style.innerHTML = `
         /* Scoped light shade for table headers */
         table.dataTable.dt-ms-table thead th {
           padding: var(--dt-header-padding, 6px 10px) !important;
@@ -265,10 +269,119 @@ const useDataTableMS = ({
         /* Scoped row height/padding and cursor pointer */
         table.dataTable.dt-ms-table tbody td {
           padding: var(--dt-row-padding, 6px 10px) !important;
+          transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                      color 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                      box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), 
+                      border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         table.dataTable.dt-ms-table tbody tr {
           cursor: pointer !important;
         }
+
+        /* Override borders on row hover with higher specificity for dt-bordered-grid */
+        table.dataTable.dt-ms-table tbody tr:hover td,
+        table.dataTable.dt-ms-table.dt-bordered-grid tbody tr:hover td {
+          border-right-color: transparent !important;
+          border-bottom-color: transparent !important;
+        }
+
+        /* Scoped Premium Row Hover Look and Feel (mimicking the autocomplete dropdown hover) */
+        table.dataTable.dt-ms-table tbody tr:not(.selected):hover td,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd:not(.selected):hover td,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even:not(.selected):hover td {
+          background-color: rgba(var(--bs-primary-rgb, 8, 155, 171), 0.08) !important;
+          color: var(--bs-primary, #089bab) !important;
+          border-right-color: transparent !important;
+          border-bottom-color: transparent !important;
+          box-shadow: inset 0 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15) !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr:not(.selected):hover td,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd:not(.selected):hover td,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even:not(.selected):hover td {
+          background-color: rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15) !important;
+          box-shadow: inset 0 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3) !important;
+        }
+        
+        table.dataTable.dt-ms-table tbody tr:not(.selected):hover td:first-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd:not(.selected):hover td:first-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even:not(.selected):hover td:first-child {
+          border-top-left-radius: 6px !important;
+          border-bottom-left-radius: 6px !important;
+          box-shadow: inset 1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15) !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr:not(.selected):hover td:first-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd:not(.selected):hover td:first-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even:not(.selected):hover td:first-child {
+          box-shadow: inset 1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3) !important;
+        }
+
+        table.dataTable.dt-ms-table tbody tr:not(.selected):hover td:last-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd:not(.selected):hover td:last-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even:not(.selected):hover td:last-child {
+          border-top-right-radius: 6px !important;
+          border-bottom-right-radius: 6px !important;
+          box-shadow: inset -1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.15) !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr:not(.selected):hover td:last-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd:not(.selected):hover td:last-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even:not(.selected):hover td:last-child {
+          box-shadow: inset -1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3) !important;
+        }
+
+        /* Hovering on a selected row */
+        table.dataTable.dt-ms-table tbody tr.selected:hover td,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd.selected:hover td,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even.selected:hover td {
+          background-color: rgba(var(--bs-primary-rgb, 8, 155, 171), 0.18) !important;
+          border-right-color: transparent !important;
+          border-bottom-color: transparent !important;
+          box-shadow: inset 0 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.25), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.25) !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr.selected:hover td,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd.selected:hover td,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even.selected:hover td {
+          background-color: rgba(var(--bs-primary-rgb, 8, 155, 171), 0.3) !important;
+          box-shadow: inset 0 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.4), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.4) !important;
+        }
+
+        table.dataTable.dt-ms-table tbody tr.selected:hover td:first-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd.selected:hover td:first-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even.selected:hover td:first-child {
+          border-top-left-radius: 6px !important;
+          border-bottom-left-radius: 6px !important;
+          box-shadow: inset 1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.25), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.25) !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr.selected:hover td:first-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd.selected:hover td:first-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even.selected:hover td:first-child {
+          box-shadow: inset 1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.4), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.4) !important;
+        }
+
+        table.dataTable.dt-ms-table tbody tr.selected:hover td:last-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd.selected:hover td:last-child,
+        table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even.selected:hover td:last-child {
+          border-top-right-radius: 6px !important;
+          border-bottom-right-radius: 6px !important;
+          box-shadow: inset -1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.25), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.25) !important;
+        }
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table tbody tr.selected:hover td:last-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.odd.selected:hover td:last-child,
+        [data-bs-theme="dark"] table.dataTable.dt-ms-table.dt-zebra-stripes tbody tr.even.selected:hover td:last-child {
+          box-shadow: inset -1px 1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.4), 
+                      inset 0 -1px 0 rgba(var(--bs-primary-rgb, 8, 155, 171), 0.4) !important;
+        }
+
 
         /* Hide sorting icons on utility columns (selection checkbox and S.No) */
         table.dataTable thead th.dt-select-cell::before,
@@ -624,8 +737,6 @@ const useDataTableMS = ({
           }
         }
       `;
-      document.head.appendChild(style);
-    }
 
     const timer = setTimeout(() => {
       // Prepend dynamic S.No and Row Selection checkbox columns
@@ -930,6 +1041,7 @@ const useDataTableMS = ({
 
       // 3. Implement AG-Grid-style Column Reordering with a Custom Ghost Helper and full vertical Insertion Line
       const enableDragAndDropReordering = () => {
+        if (!columnReorder) return;
         const $headers = $table.find("thead tr:first-child th");
 
         $headers.each(function (index) {
@@ -1133,11 +1245,10 @@ const useDataTableMS = ({
       // 4. Inject Custom Columns Dropdown and Export dropdown to the left of the native Search box
       const $filterContainer = $wrapper.find(".dataTables_filter");
       if ($filterContainer.length) {
-        // Remove any old buttons to avoid duplicates
+        // Remove any old duplicates
         $filterContainer.find(".dt-custom-buttons").remove();
 
-        const buttonsHtml = `
-          <div class="dt-custom-buttons d-inline-flex align-items-center gap-2 me-2">
+        const columnsButtonHtml = columnReorder ? `
             <!-- Custom Columns Dropdown -->
             <div class="dropdown d-inline-block">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1 col-dropdown-toggle" type="button" aria-expanded="false">
@@ -1160,7 +1271,11 @@ const useDataTableMS = ({
                 </div>
               </div>
             </div>
+        ` : "";
 
+        const buttonsHtml = `
+          <div class="dt-custom-buttons d-inline-flex align-items-center gap-2 me-2">
+            ${columnsButtonHtml}
             <!-- Custom Export Dropdown -->
             <div class="dropdown d-inline-block">
               <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-1 export-dropdown-toggle" type="button" aria-expanded="false">
@@ -1184,6 +1299,7 @@ const useDataTableMS = ({
 
         // Populate column list in the dropdown
         const populateColumnList = () => {
+          if (!columnReorder) return;
           const $listContainer = $customButtons.find(".col-list-container");
           $listContainer.empty();
 
@@ -1224,17 +1340,101 @@ const useDataTableMS = ({
           $toggleAll.prop("indeterminate", anyVisible && !allVisible);
         };
 
-        // Col Dropdown toggle
-        $colToggleBtn.off("click").on("click", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-          const isOpen = $colDropdownMenu.hasClass("show");
-          $(".dt-custom-buttons .dropdown-menu").removeClass("show");
-          if (!isOpen) {
-            $colDropdownMenu.addClass("show");
+        if (columnReorder) {
+          // Col Dropdown toggle
+          $colToggleBtn.off("click").on("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const isOpen = $colDropdownMenu.hasClass("show");
+            $(".dt-custom-buttons .dropdown-menu").removeClass("show");
+            if (!isOpen) {
+              $colDropdownMenu.addClass("show");
+              populateColumnList();
+            }
+          });
+
+          // Toggle individual column visibility
+          $customButtons.off("change", ".col-toggle-chk").on("change", ".col-toggle-chk", function (e) {
+            e.stopPropagation();
+            const colIdx = parseInt($(this).val());
+            const isVisible = $(this).is(":checked");
+            const column = datatable.column(colIdx);
+            column.visible(isVisible);
+
+            // Save visibility state to ref
+            const colObj = finalColumns[colIdx];
+            if (colObj && colObj.data) {
+              columnVisibilityRef.current[colObj.data] = isVisible;
+            }
+
+            datatable.columns.adjust();
             populateColumnList();
-          }
-        });
+            setColumnVisibility({ ...columnVisibilityRef.current });
+          });
+
+          // Toggle all columns visibility
+          $customButtons.off("change", ".toggle-all-cols-chk").on("change", ".toggle-all-cols-chk", function (e) {
+            e.stopPropagation();
+            const isChecked = $(this).is(":checked");
+
+            datatable.columns().every(function (idx) {
+              const column = this;
+              const headerCell = column.header();
+              const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
+              if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
+                return;
+              }
+              column.visible(isChecked);
+
+              const colObj = finalColumns[idx];
+              if (colObj && colObj.data) {
+                columnVisibilityRef.current[colObj.data] = isChecked;
+              }
+            });
+
+            datatable.columns.adjust();
+            populateColumnList();
+            setColumnVisibility({ ...columnVisibilityRef.current });
+          });
+
+          // Reset columns visibility
+          $customButtons.off("click", ".col-reset-btn").on("click", ".col-reset-btn", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            datatable.columns().every(function (idx) {
+              const column = this;
+              const headerCell = column.header();
+              const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
+              if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
+                return;
+              }
+              column.visible(true);
+
+              const colObj = finalColumns[idx];
+              if (colObj && colObj.data) {
+                columnVisibilityRef.current[colObj.data] = true;
+              }
+            });
+
+            datatable.columns.adjust();
+            populateColumnList();
+            setColumnVisibility({ ...columnVisibilityRef.current });
+          });
+
+          // Search columns in dropdown
+          $customButtons.off("keyup", ".col-search-input").on("keyup", ".col-search-input", function () {
+            const query = $(this).val().toLowerCase();
+            $customButtons.find(".col-item").each(function () {
+              const title = $(this).attr("data-col-title");
+              if (title.indexOf(query) !== -1) {
+                $(this).show();
+              } else {
+                $(this).hide();
+              }
+            });
+          });
+        }
 
         // Export Dropdown toggle
         $exportToggleBtn.off("click").on("click", function (e) {
@@ -1245,88 +1445,6 @@ const useDataTableMS = ({
           if (!isOpen) {
             $exportDropdownMenu.addClass("show");
           }
-        });
-
-        // Toggle individual column visibility
-        $customButtons.off("change", ".col-toggle-chk").on("change", ".col-toggle-chk", function (e) {
-          e.stopPropagation();
-          const colIdx = parseInt($(this).val());
-          const isVisible = $(this).is(":checked");
-          const column = datatable.column(colIdx);
-          column.visible(isVisible);
-
-          // Save visibility state to ref
-          const colObj = finalColumns[colIdx];
-          if (colObj && colObj.data) {
-            columnVisibilityRef.current[colObj.data] = isVisible;
-          }
-
-          datatable.columns.adjust();
-          populateColumnList();
-          setColumnVisibility({ ...columnVisibilityRef.current });
-        });
-
-        // Toggle all columns visibility
-        $customButtons.off("change", ".toggle-all-cols-chk").on("change", ".toggle-all-cols-chk", function (e) {
-          e.stopPropagation();
-          const isChecked = $(this).is(":checked");
-
-          datatable.columns().every(function (idx) {
-            const column = this;
-            const headerCell = column.header();
-            const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
-            if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
-              return;
-            }
-            column.visible(isChecked);
-
-            const colObj = finalColumns[idx];
-            if (colObj && colObj.data) {
-              columnVisibilityRef.current[colObj.data] = isChecked;
-            }
-          });
-
-          datatable.columns.adjust();
-          populateColumnList();
-          setColumnVisibility({ ...columnVisibilityRef.current });
-        });
-
-        // Reset columns visibility
-        $customButtons.off("click", ".col-reset-btn").on("click", ".col-reset-btn", function (e) {
-          e.preventDefault();
-          e.stopPropagation();
-
-          datatable.columns().every(function (idx) {
-            const column = this;
-            const headerCell = column.header();
-            const title = $(headerCell).text().replace(/Filter.*$/, '').trim();
-            if (!title || title === "S.No" || title === "Action" || $(headerCell).find(".dt-select-all").length) {
-              return;
-            }
-            column.visible(true);
-
-            const colObj = finalColumns[idx];
-            if (colObj && colObj.data) {
-              columnVisibilityRef.current[colObj.data] = true;
-            }
-          });
-
-          datatable.columns.adjust();
-          populateColumnList();
-          setColumnVisibility({ ...columnVisibilityRef.current });
-        });
-
-        // Search columns in dropdown
-        $customButtons.off("keyup", ".col-search-input").on("keyup", ".col-search-input", function () {
-          const query = $(this).val().toLowerCase();
-          $customButtons.find(".col-item").each(function () {
-            const title = $(this).attr("data-col-title");
-            if (title.indexOf(query) !== -1) {
-              $(this).show();
-            } else {
-              $(this).hide();
-            }
-          });
         });
 
         // Close dropdowns when clicking anywhere outside
@@ -1697,6 +1815,7 @@ const useDataTableMS = ({
     scrollHeight,
     pageSize,
     emptyMessage,
+    columnReorder,
   ]);
 
   // 4. Perform dynamic data loading/append updates (optimized for smooth infinite scrolls)

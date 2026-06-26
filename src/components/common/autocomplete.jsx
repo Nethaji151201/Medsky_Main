@@ -24,8 +24,72 @@ const CommonAutocomplete = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const [direction, setDirection] = useState("down");
   const containerRef = useRef(null);
   const listRef = useRef(null);
+
+  // Dynamically calculate whether the dropdown list fits below the input control
+  useEffect(() => {
+    const updateDirection = () => {
+      if (isOpen && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        
+        // Find closest clipping parent (scrollable or modal container)
+        let clippingParent = null;
+        let parent = containerRef.current.parentElement;
+        while (parent) {
+          if (parent === document.body || parent === document.documentElement) {
+            break;
+          }
+          const style = window.getComputedStyle(parent);
+          const overflowY = style.overflowY;
+          if (
+            overflowY === "auto" || 
+            overflowY === "scroll" || 
+            overflowY === "hidden" ||
+            parent.classList.contains("modal-body") ||
+            parent.classList.contains("modal-content") ||
+            parent.classList.contains("card-body")
+          ) {
+            clippingParent = parent;
+            break;
+          }
+          parent = parent.parentElement;
+        }
+
+        let spaceBelow = window.innerHeight - rect.bottom;
+        let spaceAbove = rect.top;
+
+        if (clippingParent) {
+          const parentRect = clippingParent.getBoundingClientRect();
+          const parentSpaceBelow = parentRect.bottom - rect.bottom;
+          const parentSpaceAbove = rect.top - parentRect.top;
+          
+          // Use the more restrictive boundary
+          spaceBelow = Math.min(spaceBelow, parentSpaceBelow);
+          spaceAbove = Math.min(spaceAbove, parentSpaceAbove);
+        }
+
+        const minSpaceNeeded = 230; // 220px maxHeight + padding
+        const newDir = spaceBelow < minSpaceNeeded && spaceAbove > spaceBelow ? "up" : "down";
+        
+        console.log("Autocomplete Direction debug: spaceBelow=" + spaceBelow + " spaceAbove=" + spaceAbove + " newDir=" + newDir);
+        setDirection(newDir);
+      }
+    };
+
+    if (isOpen) {
+      updateDirection();
+      // Listen to capture scroll on any element, including inside modals/dialogs
+      window.addEventListener("scroll", updateDirection, true);
+      window.addEventListener("resize", updateDirection);
+    }
+
+    return () => {
+      window.removeEventListener("scroll", updateDirection, true);
+      window.removeEventListener("resize", updateDirection);
+    };
+  }, [isOpen]);
 
   // Scroll highlighted item into view automatically
   useEffect(() => {
@@ -169,9 +233,28 @@ const CommonAutocomplete = ({
   return (
     <div
       ref={containerRef}
-      className={`position-relative ${className}`}
+      className={`position-relative autocomplete-container ${isOpen ? "autocomplete-open" : "autocomplete-closed"} ${className}`}
       style={{ width }}
     >
+      <style>{`
+        .autocomplete-container .form-control {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+          background-repeat: no-repeat !important;
+          background-position: right 0.75rem center !important;
+          background-size: 14px 10px !important;
+          padding-right: 2.25rem !important;
+          transition: background-image 0.15s ease-in-out !important;
+        }
+        [data-bs-theme="dark"] .autocomplete-container .form-control {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cccccc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e") !important;
+        }
+        .autocomplete-container.autocomplete-open .form-control {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23888888' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 11 6-6 6 6'/%3e%3c/svg%3e") !important;
+        }
+        [data-bs-theme="dark"] .autocomplete-container.autocomplete-open .form-control {
+          background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23cccccc' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 11 6-6 6 6'/%3e%3c/svg%3e") !important;
+        }
+      `}</style>
       <CommonTextField
         label={label}
         id={id}
@@ -192,19 +275,21 @@ const CommonAutocomplete = ({
       {isOpen && filteredOptions.length > 0 && (
         <ListGroup
           ref={listRef}
-          className="position-absolute shadow rounded-2 overflow-auto bg-body"
+          className="position-absolute shadow rounded-2 bg-body"
           style={{
             zIndex: 1050,
             maxHeight: "220px",
-            top: "100%",
+            ...(direction === "up"
+              ? { bottom: "100%", marginBottom: "6px" }
+              : { top: "100%", marginTop: "-6px" }),
             left: 0,
-            marginTop: "-6px",
             border: "1px solid var(--bs-border-color)",
-            minWidth: "100%",
-            width: "max-content",
-            maxWidth: "100vw",
-            display: "inline-flex",
+            width: "100%",
+            display: "flex",
             flexDirection: "column",
+            overflowY: "auto",
+            overflowX: "hidden",
+            padding: "4px 12px 4px 4px",
           }}
         >
           {filteredOptions.map((option, idx) => {
@@ -245,15 +330,15 @@ const CommonAutocomplete = ({
           className="position-absolute shadow rounded-2 bg-body"
           style={{
             zIndex: 1050,
-            top: "100%",
+            ...(direction === "up"
+              ? { bottom: "100%", marginBottom: "6px" }
+              : { top: "100%", marginTop: "-6px" }),
             left: 0,
-            marginTop: "-6px",
             border: "1px solid var(--bs-border-color)",
-            minWidth: "100%",
-            width: "max-content",
-            maxWidth: "100vw",
-            display: "inline-flex",
+            width: "100%",
+            display: "flex",
             flexDirection: "column",
+            overflowX: "hidden",
           }}
         >
           <ListGroup.Item className="py-2 px-3 text-muted text-start bg-body border-0">
