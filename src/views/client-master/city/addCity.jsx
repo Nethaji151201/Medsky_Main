@@ -53,7 +53,7 @@ const ClientAddCity = ({
 
     return (
         <form onSubmit={handleSubmit} id="city-form" noValidate>
-            <div className="d-flex flex-column gap-3">
+            <div className="d-flex flex-column gap-1">
                 <CommonTextField
                     label="City Name"
                     id="cityNameInput"
@@ -61,17 +61,6 @@ const ClientAddCity = ({
                     value={cityName}
                     onChange={(e) => setCityName(e.target.value)}
                     error={formErrors.cityName}
-                    required
-                />
-
-                <CommonTextField
-                    label="Sort Order"
-                    id="sortOrderInput"
-                    type="number"
-                    placeholder="e.g. 1"
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    error={formErrors.sortOrder}
                     required
                 />
 

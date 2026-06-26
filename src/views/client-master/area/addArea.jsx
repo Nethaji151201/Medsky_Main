@@ -68,7 +68,7 @@ const ClientAddArea = ({
 
     return (
         <form onSubmit={handleSubmit} id="area-form" noValidate>
-            <div className="d-flex flex-column gap-3">
+            <div className="d-flex flex-column gap-1">
                 <CommonTextField
                     label="Area Name"
                     id="areaNameInput"
@@ -89,17 +89,6 @@ const ClientAddArea = ({
                     error={formErrors.cityName}
                     required
                     className="mb-0"
-                />
-
-                <CommonTextField
-                    label="Sort Order"
-                    id="sortOrderInput"
-                    type="number"
-                    placeholder="e.g. 1"
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    error={formErrors.sortOrder}
-                    required
                 />
 
                 <CommonCheckbox

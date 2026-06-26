@@ -5,30 +5,113 @@ import { Link, useLocation } from "react-router-dom";
 export const MenuListNew = [
     {
         isHeader: true,
-        title: 'Masters',
+        title: '',
+        content: [
+            {
+                title: 'Configration',
+                to: '/masters',
+                icon: 'ri-home-8-fill',
+                content: [
+                    {
+                        title: 'Masters',
+                        to: '/masters',
+                        icon: 'ri-home-8-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Client Area',
+                        to: '/masters/area',
+                        icon: 'ri-home-8-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Client City',
+                        to: '/masters/city',
+                        icon: 'ri-home-8-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                ],
+                addPermission: true,
+                editPermission: true,
+                deletePermission: true,
+                viewPermission: true
+            },
+        ]
+    },
+    {
+        divider: true
+    },
+    {
+        isHeader: true,
+        title: '',
         content: [
             {
                 title: 'Masters',
-                to: '/masters',
                 icon: 'ri-home-8-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Area',
-                to: '/masters/area',
-                icon: 'ri-home-8-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'City',
-                to: '/masters/city',
-                icon: 'ri-home-8-fill',
+                content: [{
+                    title: 'Docters List',
+                    to: '/docters/docters-list',
+                    icon: 'ri-file-list-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Docter Calender',
+                    to: '/docters/docters-calander',
+                    icon: 'ri-calendar-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Area',
+                    to: '/client-masters/area',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'City',
+                    to: '/client-masters/city',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Referrer List',
+                    to: '/masters/referrer-list',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Referrer Organisation',
+                    to: '/masters/referrer-org',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                ],
                 addPermission: true,
                 editPermission: true,
                 deletePermission: true,
@@ -37,67 +120,43 @@ export const MenuListNew = [
         ]
     },
     {
-        isHeader: true,
-        title: 'Client Masters',
-        content: [
-            {
-                title: 'Area',
-                to: '/client-masters/area',
-                icon: 'ri-home-8-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'City',
-                to: '/client-masters/city',
-                icon: 'ri-home-8-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-        ]
+        divider: true
     },
     {
         isHeader: true,
-        title: 'Docters',
-        content: [
-            {
-                title: 'Docters List',
-                to: '/docters/docters-list',
-                icon: 'ri-home-8-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-        ]
-    },
-    {
-        isHeader: true,
-        title: 'Patients',
+        title: '',
         content: [
             {
                 title: 'Patients',
                 to: '/patients/patient-list',
                 icon: 'ri-home-8-fill',
-                addPermission: true,
-                editPermission: true,
-                deletePermission: true,
-                viewPermission: true
-            },
-            {
-                title: 'Out Patients',
-                to: '/patients/op-list',
-                icon: 'ri-home-8-fill',
+                content: [{
+                    title: 'Patients',
+                    to: '/patients/patient-list',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Out Patients',
+                    to: '/patients/op-list',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },],
                 addPermission: true,
                 editPermission: true,
                 deletePermission: true,
                 viewPermission: true
             },
         ]
+    },
+    {
+        divider: true
     },
     {
         isHeader: true,
@@ -887,22 +946,24 @@ const VerticalNav = () => {
                             return (
                                 <React.Fragment key={`group-${groupIndex}`}>
                                     <Nav.Item as="li" className="static-item ms-2">
-                                        <Link
-                                            className="nav-link static-item disabled text-start"
-                                            tabIndex="-1"
-                                            to="#"
-                                        >
-                                            <span className="default-icon">{group.title}</span>
-                                            <OverlayTrigger
-                                                key={group.title}
-                                                placement="right"
-                                                overlay={
-                                                    <Tooltip id={`tooltip-header-${groupIndex}`}>{group.title}</Tooltip>
-                                                }
+                                        {group.title && (
+                                            <Link
+                                                className="nav-link static-item disabled text-start"
+                                                tabIndex="-1"
+                                                to="#"
                                             >
-                                                <span className="mini-icon">-</span>
-                                            </OverlayTrigger>
-                                        </Link>
+                                                <span className="default-icon">{group.title}</span>
+                                                <OverlayTrigger
+                                                    key={group.title}
+                                                    placement="right"
+                                                    overlay={
+                                                        <Tooltip id={`tooltip-header-${groupIndex}`}>{group.title}</Tooltip>
+                                                    }
+                                                >
+                                                    <span className="mini-icon">-</span>
+                                                </OverlayTrigger>
+                                            </Link>
+                                        )}
                                     </Nav.Item>
 
                                     {group.content && group.content.map((item, itemIndex) => {

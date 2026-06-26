@@ -231,3 +231,268 @@ ul.edit-profile li:last-child a {
 
 
 }
+
+.doctor-calendar-card {
+    .card-header {
+        background: var(--bs-body-bg);
+    }
+}
+
+.doctor-calendar-header {
+    align-items: flex-start;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(220px, 1fr) minmax(0, auto);
+}
+
+.doctor-calendar-heading {
+    min-width: 220px;
+}
+
+.doctor-calendar-title-icon {
+    align-items: center;
+    background: rgba(var(--bs-primary-rgb), .12);
+    border-radius: 6px;
+    color: var(--bs-primary);
+    display: inline-flex;
+    font-size: 1.15rem;
+    height: 34px;
+    justify-content: center;
+    width: 34px;
+}
+
+.doctor-calendar-actions {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    justify-content: flex-end;
+    max-width: 100%;
+}
+
+.doctor-calendar-view-switch {
+    .btn {
+        align-items: center;
+        display: inline-flex;
+        min-height: 34px;
+        padding-left: .9rem;
+        padding-right: .9rem;
+    }
+
+    .btn-light {
+        background: var(--bs-tertiary-bg);
+        border-color: var(--bs-border-color);
+        color: var(--bs-body-color);
+    }
+}
+
+.doctor-calendar-week-picker {
+    width: 190px;
+}
+
+.doctor-calendar-filter {
+    align-items: center;
+    display: flex;
+    gap: .5rem;
+}
+
+.doctor-calendar-doctor {
+    width: 320px;
+}
+
+.doctor-calendar-time-split {
+    width: 210px;
+}
+
+.doctor-calendar-add {
+    min-height: 34px;
+}
+
+.doctor-calendar-summary {
+    align-items: center;
+    background: var(--bs-tertiary-bg);
+    border-bottom: 1px solid var(--bs-border-color);
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: minmax(170px, 1fr) repeat(3, auto);
+}
+
+.doctor-calendar-summary-day {
+    grid-template-columns: repeat(2, auto) 1fr;
+}
+
+.doctor-calendar-badge {
+    justify-self: end;
+    border: 1px solid rgba(var(--bs-success-rgb), .18);
+    font-size: .78rem;
+    padding: .45rem .65rem;
+}
+
+.doctor-calendar-table-wrap {
+    background: var(--bs-body-bg);
+}
+
+.doctor-calendar-table {
+    min-width: 960px;
+
+    thead th {
+        background: var(--bs-tertiary-bg);
+        color: var(--bs-body-color);
+        font-weight: 700;
+        padding: .85rem .65rem;
+        vertical-align: middle;
+    }
+
+    tbody td {
+        background: var(--bs-body-bg);
+        padding: .8rem .65rem;
+        vertical-align: middle;
+    }
+
+    tbody tr:hover td {
+        background: rgba(var(--bs-primary-rgb), .04);
+    }
+}
+
+.doctor-calendar-day-col {
+    min-width: 108px;
+}
+
+.doctor-calendar-action-col {
+    width: 82px;
+}
+
+.doctor-calendar-day-head {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: .25rem;
+    line-height: 1.2;
+}
+
+.doctor-calendar-date {
+    color: var(--bs-secondary-color);
+    font-size: .78rem;
+    font-weight: 500;
+}
+
+.doctor-calendar-check {
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    padding-left: 0;
+
+    .form-check-input {
+        cursor: pointer;
+        float: none;
+        height: 1.05rem;
+        margin: 0;
+        width: 1.05rem;
+    }
+
+    &.form-group {
+        margin-bottom: 0;
+    }
+}
+
+.doctor-calendar-time-input {
+    min-width: 126px;
+}
+
+.doctor-calendar-patient-input {
+    height: 34px;
+    margin: 0 auto;
+    max-width: 92px;
+    text-align: center;
+}
+
+.doctor-calendar-delete {
+    align-items: center;
+    border-radius: 6px;
+    color: var(--bs-danger);
+    display: inline-flex;
+    font-size: 1.2rem;
+    height: 34px;
+    justify-content: center;
+    padding: 0;
+    text-decoration: none;
+    width: 34px;
+
+    &:hover,
+    &:focus {
+        background: rgba(var(--bs-danger-rgb), .1);
+        color: var(--bs-danger);
+    }
+}
+
+.doctor-calendar-empty {
+    align-items: center;
+    color: var(--bs-secondary-color);
+    display: flex;
+    flex-direction: column;
+    gap: .75rem;
+
+    i {
+        color: var(--bs-primary);
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 992px) {
+    .doctor-calendar-header {
+        grid-template-columns: 1fr;
+    }
+
+    .doctor-calendar-actions {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    .doctor-calendar-doctor,
+    .doctor-calendar-week-picker,
+    .doctor-calendar-time-split {
+        width: 100%;
+    }
+
+    .doctor-calendar-filter {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .doctor-calendar-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .doctor-calendar-summary-day {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 576px) {
+    .doctor-calendar-view-switch {
+        width: 100%;
+
+        .btn {
+            justify-content: center;
+            width: 50%;
+        }
+    }
+
+    .doctor-calendar-doctor {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .doctor-calendar-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .doctor-calendar-summary-day {
+        grid-template-columns: 1fr;
+    }
+
+    .doctor-calendar-badge {
+        justify-self: start;
+    }
+}

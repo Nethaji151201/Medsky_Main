@@ -25,12 +25,6 @@ const ClientCityList = () => {
             title: "City Name"
         },
         {
-            data: "sortOrder",
-            title: "Sort Order",
-            className: "text-center",
-            width: "120px"
-        },
-        {
             data: "status",
             title: "Status",
             className: "text-center",

@@ -367,6 +367,27 @@ const GlobalType = () => {
                 onClose={() => setShowAddModal(false)}
                 title={clickedRow ? `Edit ${JSON.parse(selectedOptionJson)?.label}` : `Create ${JSON.parse(selectedOptionJson)?.label}`}
                 maxWidth="400px"
+                footer={
+                    <div className="d-flex justify-content-end gap-3 w-100">
+                        <Button
+                            variant="outline-secondary"
+                            onClick={() => setShowAddModal(false)}
+                            className="px-4"
+                            style={{ minWidth: "120px", height: "38px" }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            type="submit"
+                            form="globaltype-form"
+                            variant="primary"
+                            className="px-4"
+                            style={{ minWidth: "120px", height: "38px" }}
+                        >
+                            <i className="ri-save-line me-1"></i> Save
+                        </Button>
+                    </div>
+                }
             >
                 <AddGlobalType masterDetails={JSON.parse(selectedOptionJson)} masterData={clickedRow} onClose={() => setShowAddModal(false)} onSuccess={() => setShowAddModal(false)} />
             </CommonDialog>

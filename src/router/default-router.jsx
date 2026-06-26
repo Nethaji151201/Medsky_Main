@@ -110,6 +110,9 @@ import AreaList from "../views/masters/area/areaList"
 import CityList from "../views/masters/city/cityList"
 import ClientAreaList from "../views/client-master/area/areaList"
 import ClientCityList from "../views/client-master/city/cityList"
+import DoctersCalander from "../views/msdocters/doctersCalander"
+import ReferrerList from "../views/masters/referrer-list/referrerList"
+import ReferrerOrgList from "../views/masters/referrer-org/referrerOrgList"
 
 export const DefaultRoute = [
   {
@@ -129,12 +132,23 @@ export const DefaultRoute = [
         path: '/masters/city',
         element: <CityList />
       },
+      {
+        path: '/masters/referrer-list',
+        element: <ReferrerList />
+      },
+      {
+        path: '/masters/referrer-org',
+        element: <ReferrerOrgList />
+      },
       // ------ Doctors ------
       {
         path: '/docters/docters-list',
         element: <DoctersList />
       },
-
+      {
+        path: '/docters/docters-calander',
+        element: <DoctersCalander />
+      },
       // ------ Patients ------
       {
         path: '/patients/patient-list',

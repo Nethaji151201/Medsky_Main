@@ -77,7 +77,7 @@ const AddGlobalType = ({
 
     return (
         <>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} id="globaltype-form" noValidate>
                 <div className="d-flex flex-column">
                     {/* CommonTextField for master name input */}
                     <CommonTextField
@@ -118,14 +118,6 @@ const AddGlobalType = ({
                         checked={status === 1}
                         onChange={(e) => setStatus(e.target.checked ? 1 : 0)}
                     />
-                </div>
-                <div className="d-flex justify-content-end gap-2 w-100 bg-body-tertiary p-3 rounded mt-3">
-                    <Button variant="outline-secondary" size="sm" onClick={() => onClose()}>
-                        Cancel
-                    </Button>
-                    <Button variant="primary" size="sm" onClick={handleSubmit} className="px-3">
-                        Save
-                    </Button>
                 </div>
             </form>
         </>

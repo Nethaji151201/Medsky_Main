@@ -15,14 +15,21 @@ const CommonDialog = ({
   titleAlign = 'center', // Dynamic alignment: 'start', 'center', 'end' (default 'center')
   scrollable = true     // Static header/footer, scrollable body
 }) => {
-  // Map maxWidth to Bootstrap sizes
+  // Map maxWidth to Bootstrap sizes or custom styles
   let size = undefined;
+  let customStyle = {};
+
   if (maxWidth === 'xs' || maxWidth === 'sm') {
     size = 'sm';
+  } else if (maxWidth === 'md') {
+    size = undefined; // Default Bootstrap size
   } else if (maxWidth === 'lg') {
     size = 'lg';
   } else if (maxWidth === 'xl') {
     size = 'xl';
+  } else if (maxWidth) {
+    const widthVal = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
+    customStyle = { '--bs-modal-width': widthVal };
   }
 
   return (
@@ -37,6 +44,7 @@ const CommonDialog = ({
       dialogClassName={fullWidth ? "mw-100 w-100 px-3" : ""}
       className="ps-0"
       scrollable={scrollable}
+      style={customStyle}
     >
       <Modal.Header closeButton={!!onClose} closeVariant="white" className="bg-primary text-white">
         <Modal.Title as="h5" className={`d-flex align-items-center gap-2 flex-grow-1 bg-primary text-white justify-content-${titleAlign === 'end' ? 'end' : (titleAlign === 'start' ? 'start' : 'center')}`}>
