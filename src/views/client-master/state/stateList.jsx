@@ -3,43 +3,26 @@ import { Row, Col, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 import useDataTableMS from "../../../components/hooks/useDatatableMS";
 import CommonDialog from "../../../components/common/dialog";
-import ClientAddArea from "./addArea";
+import AddClientState from "./addState";
 
-const initialCitiesData = [
-    { id: 1, cityName: "Chennai", sortOrder: 1, status: 1 },
-    { id: 2, cityName: "Bangalore", sortOrder: 2, status: 1 },
-    { id: 3, cityName: "Mumbai", sortOrder: 3, status: 1 },
-    { id: 4, cityName: "Hyderabad", sortOrder: 4, status: 0 }
+const initialStateData = [
+    { id: 1, stateName: "Chennai", sortOrder: 1, status: 1 },
+    { id: 2, stateName: "Bangalore", sortOrder: 2, status: 1 },
+    { id: 3, stateName: "Mumbai", sortOrder: 3, status: 1 },
+    { id: 4, stateName: "Hyderabad", sortOrder: 4, status: 0 }
 ];
 
-const initialAreasData = [
-    { id: 1, areaName: "T. Nagar", cityName: "Chennai", pincode: "600001", sortOrder: 1, status: 1 },
-    { id: 2, areaName: "Adyar", cityName: "Chennai", pincode: "600002", sortOrder: 2, status: 1 },
-    { id: 3, areaName: "Indiranagar", cityName: "Bangalore", pincode: "600003", sortOrder: 3, status: 1 },
-    { id: 4, areaName: "Koramangala", cityName: "Bangalore", pincode: "600004", sortOrder: 4, status: 1 },
-    { id: 5, areaName: "Andheri", cityName: "Mumbai", pincode: "600005", sortOrder: 5, status: 1 }
-];
-
-const ClientAreaList = () => {
+const ClientStateList = () => {
     const tableRef = useRef(null);
-    const [areas, setAreas] = useState(initialAreasData);
-    const [cities] = useState(initialCitiesData);
+    const [state, setState] = useState(initialStateData);
     const [clickedRow, setClickedRow] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
     // Columns configuration
     const columns = [
         {
-            data: "areaName",
-            title: "Area"
-        },
-        {
-            data: "cityName",
-            title: "City"
-        },
-        {
-            data: "pincode",
-            title: "Pincode",
+            data: "stateName",
+            title: "State Name"
         },
         {
             data: "status",
@@ -59,7 +42,7 @@ const ClientAreaList = () => {
     useDataTableMS({
         tableRef: tableRef,
         columns: columns,
-        data: areas,
+        data: state,
         bordered: true,
         selectable: false,
         showSerialNo: true,
@@ -68,18 +51,18 @@ const ClientAreaList = () => {
             setShowAddModal(true);
         },
         zebra: true,
-        emptyMessage: "No area records found"
+        emptyMessage: "No state records found"
     });
 
-    const handleSaveArea = (savedArea) => {
+    const handleSaveState = (savedState) => {
         if (clickedRow) {
             // Edit mode
-            setAreas((prev) =>
-                prev.map((a) => (a.id === clickedRow.id ? { ...a, ...savedArea } : a))
+            setState((prev) =>
+                prev.map((c) => (c.id === clickedRow.id ? { ...c, ...savedState } : c))
             );
         } else {
             // Add mode
-            setAreas((prev) => [...prev, savedArea]);
+            setState((prev) => [...prev, savedState]);
         }
         setShowAddModal(false);
     };
@@ -91,7 +74,7 @@ const ClientAreaList = () => {
                     <Card>
                         <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
                             <Card.Header.Title className="header-title d-flex align-items-center flex-wrap gap-2">
-                                <h4 className="card-title mb-0">Areas</h4>
+                                <h4 className="card-title mb-0">State</h4>
                             </Card.Header.Title>
                             <div className="d-flex align-items-center gap-3">
                                 <Button
@@ -104,7 +87,7 @@ const ClientAreaList = () => {
                                     className="d-flex align-items-center gap-1"
                                 >
                                     <i className="ri-add-line"></i>
-                                    Add Area
+                                    Add State
                                 </Button>
                             </div>
                         </Card.Header>
@@ -121,11 +104,11 @@ const ClientAreaList = () => {
                 </Col>
             </Row>
 
-            {/* Create/Edit Area Dialog Modal */}
+            {/* Create/Edit State Dialog Modal */}
             <CommonDialog
                 open={showAddModal}
                 onClose={() => setShowAddModal(false)}
-                title={clickedRow ? "Edit Area" : "Add Area"}
+                title={clickedRow ? "Edit State" : "Add State"}
                 footer={
                     <div className="d-flex justify-content-end gap-3 w-100">
                         <Button
@@ -138,7 +121,7 @@ const ClientAreaList = () => {
                         </Button>
                         <Button
                             type="submit"
-                            form="area-form"
+                            form="state-form"
                             variant="primary"
                             className="px-4"
                             style={{ minWidth: "120px", height: "38px" }}
@@ -148,15 +131,14 @@ const ClientAreaList = () => {
                     </div>
                 }
             >
-                <ClientAddArea
-                    areaData={clickedRow}
-                    cities={cities}
+                <AddClientState
+                    stateData={clickedRow}
                     onClose={() => setShowAddModal(false)}
-                    onSuccess={handleSaveArea}
+                    onSuccess={handleSaveState}
                 />
             </CommonDialog>
         </div>
     );
 };
 
-export default ClientAreaList;
+export default ClientStateList;

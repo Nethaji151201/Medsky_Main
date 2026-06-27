@@ -3,6 +3,11 @@ import $ from "jquery";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 import "datatables.net-bs5";
 
+// Suppress alert warnings for missing/unmatched column values globally
+if ($.fn.dataTable) {
+  $.fn.dataTable.ext.errMode = "none";
+}
+
 const useDataTable = ({
   tableRef,
   columns,

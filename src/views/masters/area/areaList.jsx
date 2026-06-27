@@ -13,11 +13,11 @@ const initialCitiesData = [
 ];
 
 const initialAreasData = [
-    { id: 1, areaName: "T. Nagar", cityName: "Chennai", sortOrder: 1, status: 1 },
-    { id: 2, areaName: "Adyar", cityName: "Chennai", sortOrder: 2, status: 1 },
-    { id: 3, areaName: "Indiranagar", cityName: "Bangalore", sortOrder: 3, status: 1 },
-    { id: 4, areaName: "Koramangala", cityName: "Bangalore", sortOrder: 4, status: 1 },
-    { id: 5, areaName: "Andheri", cityName: "Mumbai", sortOrder: 5, status: 1 }
+    { id: 1, areaName: "T. Nagar", cityName: "Chennai", pincode: "600017", sortOrder: 1, status: 1 },
+    { id: 2, areaName: "Adyar", cityName: "Chennai", pincode: "600020", sortOrder: 2, status: 1 },
+    { id: 3, areaName: "Indiranagar", cityName: "Bangalore", pincode: "560038", sortOrder: 3, status: 1 },
+    { id: 4, areaName: "Koramangala", cityName: "Bangalore", pincode: "560034", sortOrder: 4, status: 1 },
+    { id: 5, areaName: "Andheri", cityName: "Mumbai", pincode: "400053", sortOrder: 5, status: 1 }
 ];
 
 const AreaList = () => {
@@ -36,6 +36,10 @@ const AreaList = () => {
         {
             data: "cityName",
             title: "City"
+        },
+        {
+            data: "pincode",
+            title: "Pincode"
         },
         {
             data: "status",

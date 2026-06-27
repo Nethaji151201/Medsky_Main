@@ -46,14 +46,14 @@ const CommonDialog = ({
       scrollable={scrollable}
       style={customStyle}
     >
-      <Modal.Header closeButton={!!onClose} closeVariant="white" className="bg-primary text-white">
-        <Modal.Title as="h5" className={`d-flex align-items-center gap-2 flex-grow-1 bg-primary text-white justify-content-${titleAlign === 'end' ? 'end' : (titleAlign === 'start' ? 'start' : 'center')}`}>
-          {titleIcon && <span className="d-inline-flex align-items-center text-white">{titleIcon}</span>}
+      <Modal.Header closeButton={!!onClose} closeVariant="white" className="">
+        <Modal.Title as="h5" className={`d-flex align-items-center gap-2 flex-grow-1 text-primary  justify-content-${titleAlign === 'end' ? 'end' : (titleAlign === 'start' ? 'start' : 'center')}`}>
+          {titleIcon && <span className="d-inline-flex align-items-center text-primary">{titleIcon}</span>}
           <span>{title}</span>
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>{children}</Modal.Body>
-      {footer && <Modal.Footer className="bg-body-tertiary">{footer}</Modal.Footer>}
+      {footer && <Modal.Footer className="">{footer}</Modal.Footer>}
     </Modal>
   );
 };

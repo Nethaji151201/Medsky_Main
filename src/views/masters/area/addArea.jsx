@@ -12,6 +12,7 @@ const AddArea = ({
 }) => {
     const [areaName, setAreaName] = useState("");
     const [cityName, setCityName] = useState("");
+    const [pincode, setPincode] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     const [status, setStatus] = useState(1); // 1 = Active, 0 = Inactive
     const [formErrors, setFormErrors] = useState({});
@@ -30,6 +31,9 @@ const AddArea = ({
         }
         if (!cityName) {
             errors.cityName = "City selection is required";
+        }
+        if (!pincode.trim()) {
+            errors.pincode = "Pincode is required";
         }
         if (!sortOrder) {
             errors.sortOrder = "Sort Order is required";
@@ -55,11 +59,13 @@ const AddArea = ({
         if (areaData) {
             setAreaName(areaData.areaName || "");
             setCityName(areaData.cityName || "");
+            setPincode(areaData.pincode || "");
             setSortOrder(areaData.sortOrder !== undefined ? areaData.sortOrder : "");
             setStatus(areaData.status !== undefined ? areaData.status : 1);
         } else {
             setAreaName("");
             setCityName("");
+            setPincode("");
             setSortOrder("");
             setStatus(1);
         }
@@ -89,6 +95,16 @@ const AddArea = ({
                     error={formErrors.cityName}
                     required
                     className="mb-0"
+                />
+
+                <CommonTextField
+                    label="Pincode"
+                    id="pinCodeInput"
+                    placeholder="e.g. 600017"
+                    value={pincode}
+                    onChange={(e) => setPincode(e.target.value)}
+                    error={formErrors.pincode}
+                    required
                 />
 
                 <CommonCheckbox

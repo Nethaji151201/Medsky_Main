@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import CommonTextField from "../../../components/common/textfield";
 import CommonCheckbox from "../../../components/common/checkbox";
+import CommonAutocomplete from "../../../components/common/autocomplete";
+
+const stateOptions = [
+    { value: 1, label: "Tamil Nadu" },
+    { value: 2, label: "Karnataka" },
+    { value: 3, label: "Maharashtra" },
+    { value: 4, label: "Telangana" }
+];
 
 const AddCity = ({
     cityData,
@@ -9,6 +16,7 @@ const AddCity = ({
     onClose,
 }) => {
     const [cityName, setCityName] = useState("");
+    const [stateName, setStateName] = useState("");
     const [sortOrder, setSortOrder] = useState("");
     const [status, setStatus] = useState(1); // 1 = Active, 0 = Inactive
     const [formErrors, setFormErrors] = useState({});
@@ -31,6 +39,7 @@ const AddCity = ({
         const record = {
             id: cityData ? cityData.id : Date.now(),
             cityName: cityName,
+            stateName: stateName,
             sortOrder: parseInt(sortOrder),
             status: status,
         };
@@ -62,6 +71,18 @@ const AddCity = ({
                     onChange={(e) => setCityName(e.target.value)}
                     error={formErrors.cityName}
                     required
+                />
+
+                <CommonAutocomplete
+                    label="State"
+                    id="stateSelectInput"
+                    placeholder="Select State"
+                    options={stateOptions}
+                    value={stateName}
+                    onChange={(val) => setStateName(val)}
+                    error={formErrors.stateName}
+                    required
+                    className="mb-0"
                 />
 
                 <CommonCheckbox

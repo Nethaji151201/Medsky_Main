@@ -3,63 +3,38 @@ import { Row, Col, Button } from "react-bootstrap";
 import Card from "../../../components/Card";
 import useDataTableMS from "../../../components/hooks/useDatatableMS";
 import CommonDialog from "../../../components/common/dialog";
-import ClientAddArea from "./addArea";
+import AddReferrerPro from "./addReferrerPro";
 
-const initialCitiesData = [
-    { id: 1, cityName: "Chennai", sortOrder: 1, status: 1 },
-    { id: 2, cityName: "Bangalore", sortOrder: 2, status: 1 },
-    { id: 3, cityName: "Mumbai", sortOrder: 3, status: 1 },
-    { id: 4, cityName: "Hyderabad", sortOrder: 4, status: 0 }
+const initialReferrersData = [
+    {
+        id: 1,
+        proName: "PRO 1",
+    },
+    {
+        id: 2,
+        proName: "PRO 2",
+    },
 ];
 
-const initialAreasData = [
-    { id: 1, areaName: "T. Nagar", cityName: "Chennai", pincode: "600001", sortOrder: 1, status: 1 },
-    { id: 2, areaName: "Adyar", cityName: "Chennai", pincode: "600002", sortOrder: 2, status: 1 },
-    { id: 3, areaName: "Indiranagar", cityName: "Bangalore", pincode: "600003", sortOrder: 3, status: 1 },
-    { id: 4, areaName: "Koramangala", cityName: "Bangalore", pincode: "600004", sortOrder: 4, status: 1 },
-    { id: 5, areaName: "Andheri", cityName: "Mumbai", pincode: "600005", sortOrder: 5, status: 1 }
-];
-
-const ClientAreaList = () => {
+const ReferrerProList = () => {
     const tableRef = useRef(null);
-    const [areas, setAreas] = useState(initialAreasData);
-    const [cities] = useState(initialCitiesData);
+    const [referrers, setReferrers] = useState(initialReferrersData);
     const [clickedRow, setClickedRow] = useState(null);
     const [showAddModal, setShowAddModal] = useState(false);
 
     // Columns configuration
     const columns = [
         {
-            data: "areaName",
-            title: "Area"
+            data: "proName",
+            title: "PRO Name",
         },
-        {
-            data: "cityName",
-            title: "City"
-        },
-        {
-            data: "pincode",
-            title: "Pincode",
-        },
-        {
-            data: "status",
-            title: "Status",
-            className: "text-center",
-            width: "140px",
-            render: function (data) {
-                if (data === 1) {
-                    return '<span class="badge bg-success-subtle text-success py-1 px-2">Active</span>';
-                }
-                return '<span class="badge bg-danger-subtle text-danger py-1 px-2">Inactive</span>';
-            }
-        }
     ];
 
     // Initialize premium hook
     useDataTableMS({
         tableRef: tableRef,
         columns: columns,
-        data: areas,
+        data: referrers,
         bordered: true,
         selectable: false,
         showSerialNo: true,
@@ -68,19 +43,24 @@ const ClientAreaList = () => {
             setShowAddModal(true);
         },
         zebra: true,
-        emptyMessage: "No area records found"
+        emptyMessage: "No referrer records found",
     });
 
-    const handleSaveArea = (savedArea) => {
+    const handleSaveReferrer = (savedReferrer) => {
         if (clickedRow) {
             // Edit mode
-            setAreas((prev) =>
-                prev.map((a) => (a.id === clickedRow.id ? { ...a, ...savedArea } : a))
+            setReferrers((prev) =>
+                prev.map((r) => (r.id === clickedRow.id ? { ...r, ...savedReferrer } : r))
             );
         } else {
             // Add mode
-            setAreas((prev) => [...prev, savedArea]);
+            setReferrers((prev) => [...prev, savedReferrer]);
         }
+        setShowAddModal(false);
+    };
+
+    const handleDeleteReferrer = (id) => {
+        setReferrers((prev) => prev.filter((r) => r.id !== id));
         setShowAddModal(false);
     };
 
@@ -91,7 +71,7 @@ const ClientAreaList = () => {
                     <Card>
                         <Card.Header className="d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
                             <Card.Header.Title className="header-title d-flex align-items-center flex-wrap gap-2">
-                                <h4 className="card-title mb-0">Areas</h4>
+                                <h4 className="card-title mb-0">Referrer PRO</h4>
                             </Card.Header.Title>
                             <div className="d-flex align-items-center gap-3">
                                 <Button
@@ -104,7 +84,7 @@ const ClientAreaList = () => {
                                     className="d-flex align-items-center gap-1"
                                 >
                                     <i className="ri-add-line"></i>
-                                    Add Area
+                                    Add Referrer PRO
                                 </Button>
                             </div>
                         </Card.Header>
@@ -121,11 +101,12 @@ const ClientAreaList = () => {
                 </Col>
             </Row>
 
-            {/* Create/Edit Area Dialog Modal */}
+            {/* Create/Edit Referrer Dialog Modal */}
             <CommonDialog
                 open={showAddModal}
                 onClose={() => setShowAddModal(false)}
-                title={clickedRow ? "Edit Area" : "Add Area"}
+                title={clickedRow ? "Edit Referrer Organisation" : "Add Referrer Organisation"}
+                maxWidth="750px"
                 footer={
                     <div className="d-flex justify-content-end gap-3 w-100">
                         <Button
@@ -138,7 +119,7 @@ const ClientAreaList = () => {
                         </Button>
                         <Button
                             type="submit"
-                            form="area-form"
+                            form="pro-form"
                             variant="primary"
                             className="px-4"
                             style={{ minWidth: "120px", height: "38px" }}
@@ -148,15 +129,15 @@ const ClientAreaList = () => {
                     </div>
                 }
             >
-                <ClientAddArea
-                    areaData={clickedRow}
-                    cities={cities}
+                <AddReferrerPro
+                    referrerData={clickedRow}
                     onClose={() => setShowAddModal(false)}
-                    onSuccess={handleSaveArea}
+                    onSuccess={handleSaveReferrer}
+                    onDelete={handleDeleteReferrer}
                 />
             </CommonDialog>
         </div>
     );
 };
 
-export default ClientAreaList;
+export default ReferrerProList;

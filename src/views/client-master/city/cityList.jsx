@@ -6,10 +6,10 @@ import CommonDialog from "../../../components/common/dialog";
 import ClientAddCity from "./addCity";
 
 const initialCitiesData = [
-    { id: 1, cityName: "Chennai", sortOrder: 1, status: 1 },
-    { id: 2, cityName: "Bangalore", sortOrder: 2, status: 1 },
-    { id: 3, cityName: "Mumbai", sortOrder: 3, status: 1 },
-    { id: 4, cityName: "Hyderabad", sortOrder: 4, status: 0 }
+    { id: 1, cityName: "Chennai", state: "Tamil Nadu", sortOrder: 1, status: 1 },
+    { id: 2, cityName: "Bangalore", state: "Karnataka", sortOrder: 2, status: 1 },
+    { id: 3, cityName: "Mumbai", state: "Maharashtra", sortOrder: 3, status: 1 },
+    { id: 4, cityName: "Hyderabad", state: "Telangana", sortOrder: 4, status: 0 }
 ];
 
 const ClientCityList = () => {
@@ -23,6 +23,10 @@ const ClientCityList = () => {
         {
             data: "cityName",
             title: "City Name"
+        },
+        {
+            data: "state",
+            title: "State"
         },
         {
             data: "status",

@@ -113,6 +113,14 @@ import ClientCityList from "../views/client-master/city/cityList"
 import DoctersCalander from "../views/msdocters/doctersCalander"
 import ReferrerList from "../views/masters/referrer-list/referrerList"
 import ReferrerOrgList from "../views/masters/referrer-org/referrerOrgList"
+import ReferrerProList from "../views/masters/referrer-pro/referrerProList"
+import SpecialityList from "../views/masters/speciality/specialityList"
+import BillingModalityList from "../views/masters/billing-modality/billingModalityList"
+import CorporateMaster from "../views/masters/corprate-master/corporateMasterList"
+import InsuranceCompany from "../views/masters/insurance-company/insuranceCompanyList"
+import StateList from "../views/masters/state/stateList"
+import ClientStateList from "../views/client-master/state/stateList"
+
 
 export const DefaultRoute = [
   {
@@ -133,12 +141,36 @@ export const DefaultRoute = [
         element: <CityList />
       },
       {
+        path: '/masters/state',
+        element: <StateList />
+      },
+      {
         path: '/masters/referrer-list',
         element: <ReferrerList />
       },
       {
         path: '/masters/referrer-org',
         element: <ReferrerOrgList />
+      },
+      {
+        path: '/masters/referrer-pro',
+        element: <ReferrerProList />
+      },
+      {
+        path: '/masters/speciality',
+        element: <SpecialityList />
+      },
+      {
+        path: '/masters/billing-modality',
+        element: <BillingModalityList />
+      },
+      {
+        path: '/masters/corporate-master',
+        element: <CorporateMaster />
+      },
+      {
+        path: '/masters/insurance-company',
+        element: <InsuranceCompany />
       },
       // ------ Doctors ------
       {
@@ -166,6 +198,10 @@ export const DefaultRoute = [
       {
         path: '/client-masters/city',
         element: <ClientCityList />
+      },
+      {
+        path: '/client-masters/state',
+        element: <ClientStateList />
       },
       //  ------ Dashboard Route ------ 
       {

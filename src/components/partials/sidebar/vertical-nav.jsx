@@ -23,7 +23,7 @@ export const MenuListNew = [
                     },
                     {
                         title: 'Client Area',
-                        to: '/masters/area',
+                        to: '/client-masters/area',
                         icon: 'ri-home-8-fill',
                         addPermission: true,
                         editPermission: true,
@@ -32,7 +32,16 @@ export const MenuListNew = [
                     },
                     {
                         title: 'Client City',
-                        to: '/masters/city',
+                        to: '/client-masters/city',
+                        icon: 'ri-home-8-fill',
+                        addPermission: true,
+                        editPermission: true,
+                        deletePermission: true,
+                        viewPermission: true
+                    },
+                    {
+                        title: 'Client State',
+                        to: '/client-masters/state',
                         icon: 'ri-home-8-fill',
                         addPermission: true,
                         editPermission: true,
@@ -75,9 +84,10 @@ export const MenuListNew = [
                     deletePermission: true,
                     viewPermission: true
                 },
+
                 {
                     title: 'Area',
-                    to: '/client-masters/area',
+                    to: '/masters/area',
                     icon: 'ri-home-8-fill',
                     addPermission: true,
                     editPermission: true,
@@ -86,7 +96,16 @@ export const MenuListNew = [
                 },
                 {
                     title: 'City',
-                    to: '/client-masters/city',
+                    to: '/masters/city',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'State',
+                    to: '/masters/state',
                     icon: 'ri-home-8-fill',
                     addPermission: true,
                     editPermission: true,
@@ -111,6 +130,51 @@ export const MenuListNew = [
                     deletePermission: true,
                     viewPermission: true
                 },
+                {
+                    title: 'Referrer PRO',
+                    to: '/masters/referrer-pro',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Speciality',
+                    to: '/masters/speciality',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: 'Billing Modality',
+                    to: '/masters/billing-modality',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: "Corporate Master",
+                    to: '/masters/corporate-master',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                },
+                {
+                    title: "Insurance Company",
+                    to: '/masters/insurance-company',
+                    icon: 'ri-home-8-fill',
+                    addPermission: true,
+                    editPermission: true,
+                    deletePermission: true,
+                    viewPermission: true
+                }
                 ],
                 addPermission: true,
                 editPermission: true,

@@ -297,6 +297,7 @@ const OPList = () => {
             mobileNumber: true,
             billNo: true
         },
+        columnReorder: true,
     });
 
     return (

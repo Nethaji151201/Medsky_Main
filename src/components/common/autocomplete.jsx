@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { ListGroup } from "react-bootstrap";
 import CommonTextField from "./textfield";
 
@@ -24,71 +25,16 @@ const CommonAutocomplete = ({
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const [direction, setDirection] = useState("down");
+  const [listStyle, setListStyle] = useState({ display: "none" });
   const containerRef = useRef(null);
   const listRef = useRef(null);
 
-  // Dynamically calculate whether the dropdown list fits below the input control
+
+
   useEffect(() => {
-    const updateDirection = () => {
-      if (isOpen && containerRef.current) {
-        const rect = containerRef.current.getBoundingClientRect();
-        
-        // Find closest clipping parent (scrollable or modal container)
-        let clippingParent = null;
-        let parent = containerRef.current.parentElement;
-        while (parent) {
-          if (parent === document.body || parent === document.documentElement) {
-            break;
-          }
-          const style = window.getComputedStyle(parent);
-          const overflowY = style.overflowY;
-          if (
-            overflowY === "auto" || 
-            overflowY === "scroll" || 
-            overflowY === "hidden" ||
-            parent.classList.contains("modal-body") ||
-            parent.classList.contains("modal-content") ||
-            parent.classList.contains("card-body")
-          ) {
-            clippingParent = parent;
-            break;
-          }
-          parent = parent.parentElement;
-        }
-
-        let spaceBelow = window.innerHeight - rect.bottom;
-        let spaceAbove = rect.top;
-
-        if (clippingParent) {
-          const parentRect = clippingParent.getBoundingClientRect();
-          const parentSpaceBelow = parentRect.bottom - rect.bottom;
-          const parentSpaceAbove = rect.top - parentRect.top;
-          
-          // Use the more restrictive boundary
-          spaceBelow = Math.min(spaceBelow, parentSpaceBelow);
-          spaceAbove = Math.min(spaceAbove, parentSpaceAbove);
-        }
-
-        const minSpaceNeeded = 230; // 220px maxHeight + padding
-        const newDir = spaceBelow < minSpaceNeeded && spaceAbove > spaceBelow ? "up" : "down";
-        
-        console.log("Autocomplete Direction debug: spaceBelow=" + spaceBelow + " spaceAbove=" + spaceAbove + " newDir=" + newDir);
-        setDirection(newDir);
-      }
-    };
-
-    if (isOpen) {
-      updateDirection();
-      // Listen to capture scroll on any element, including inside modals/dialogs
-      window.addEventListener("scroll", updateDirection, true);
-      window.addEventListener("resize", updateDirection);
+    if (!isOpen) {
+      setListStyle({ display: "none" });
     }
-
-    return () => {
-      window.removeEventListener("scroll", updateDirection, true);
-      window.removeEventListener("resize", updateDirection);
-    };
   }, [isOpen]);
 
   // Scroll highlighted item into view automatically
@@ -134,7 +80,11 @@ const CommonAutocomplete = ({
   // Handle clicking outside to dismiss dropdown list and reset input if needed
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (containerRef.current && !containerRef.current.contains(event.target)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target) &&
+        (!listRef.current || !listRef.current.contains(event.target))
+      ) {
         setIsOpen(false);
         setHighlightedIndex(-1);
 
@@ -164,6 +114,54 @@ const CommonAutocomplete = ({
         return text.includes(search);
       });
 
+  // Dynamically calculate style and position relative to the viewport/document to render in Portal
+  useEffect(() => {
+    const updatePosition = () => {
+      if (isOpen && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const spaceBelow = window.innerHeight - rect.bottom;
+        const spaceAbove = rect.top;
+        const minSpaceNeeded = 230;
+        const openUp = spaceBelow < minSpaceNeeded && spaceAbove > spaceBelow;
+
+        const left = rect.left + window.scrollX;
+        const width = rect.width;
+
+        if (openUp) {
+          setListStyle({
+            position: "absolute",
+            left: `${left}px`,
+            top: `${rect.top + window.scrollY - 6}px`,
+            transform: "translateY(-100%)",
+            width: `${width}px`,
+            zIndex: 9999,
+            display: "block"
+          });
+        } else {
+          setListStyle({
+            position: "absolute",
+            left: `${left}px`,
+            top: `${rect.bottom + window.scrollY + 6}px`,
+            transform: "none",
+            width: `${width}px`,
+            zIndex: 9999,
+            display: "block"
+          });
+        }
+      }
+    };
+
+    if (isOpen) {
+      updatePosition();
+      window.addEventListener("scroll", updatePosition, true);
+      window.addEventListener("resize", updatePosition);
+    }
+    return () => {
+      window.removeEventListener("scroll", updatePosition, true);
+      window.removeEventListener("resize", updatePosition);
+    };
+  }, [isOpen, filteredOptions.length]);
+
   const handleInputChange = (e) => {
     const val = e.target.value;
     setInputValue(val);
@@ -171,6 +169,14 @@ const CommonAutocomplete = ({
     setHighlightedIndex(0);
     if (onInputChange) {
       onInputChange(e);
+    }
+    if (val.trim() === "") {
+      if (onChange) {
+        onChange(null, null);
+      }
+      if (onChangeJson) {
+        onChangeJson(null);
+      }
     }
   };
 
@@ -272,79 +278,76 @@ const CommonAutocomplete = ({
         {...props}
       />
 
-      {isOpen && filteredOptions.length > 0 && (
-        <ListGroup
-          ref={listRef}
-          className="position-absolute shadow rounded-2 bg-body"
-          style={{
-            zIndex: 1050,
-            maxHeight: "220px",
-            ...(direction === "up"
-              ? { bottom: "100%", marginBottom: "6px" }
-              : { top: "100%", marginTop: "-6px" }),
-            left: 0,
-            border: "1px solid var(--bs-border-color)",
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            overflowY: "auto",
-            overflowX: "hidden",
-            padding: "4px 12px 4px 4px",
-          }}
-        >
-          {filteredOptions.map((option, idx) => {
-            const isHighlighted = idx === highlightedIndex;
-            const isSelected =
-              selectedOption &&
-              String(getOptionValue(option)) === String(getOptionValue(selectedOption));
+      {isOpen && filteredOptions.length > 0 && createPortal(
+        <div className="autocomplete-container" style={{ position: "absolute", ...listStyle }}>
+          <ListGroup
+            ref={listRef}
+            className="shadow rounded-2 bg-body"
+            style={{
+              maxHeight: "220px",
+              border: "1px solid var(--bs-border-color)",
+              display: "flex",
+              flexDirection: "column",
+              overflowY: "auto",
+              overflowX: "hidden",
+              padding: "4px 12px 4px 4px",
+              width: "100%"
+            }}
+          >
+            {filteredOptions.map((option, idx) => {
+              const isHighlighted = idx === highlightedIndex;
+              const isSelected =
+                selectedOption &&
+                String(getOptionValue(option)) === String(getOptionValue(selectedOption));
 
-            return (
-              <ListGroup.Item
-                key={idx}
-                action
-                active={isHighlighted}
-                onClick={() => handleSelectOption(option)}
-                className={`py-2 px-3 border-0 text-start d-flex justify-content-between align-items-center ${isHighlighted
-                  ? "bg-primary text-white"
-                  : isSelected
-                    ? "bg-primary-subtle text-primary fw-semibold"
-                    : "bg-body text-body"
-                  }`}
-                style={{ cursor: "pointer", transition: "all 0.15s ease" }}
-              >
-                <span>{getOptionLabel(option)}</span>
-                {isSelected && (
-                  <i
-                    className={`ri-check-line ${isHighlighted ? "text-white" : "text-primary"
-                      }`}
-                  ></i>
-                )}
-              </ListGroup.Item>
-            );
-          })}
-        </ListGroup>
+              return (
+                <ListGroup.Item
+                  key={idx}
+                  action
+                  active={isHighlighted}
+                  onClick={() => handleSelectOption(option)}
+                  className={`py-2 px-3 border-0 text-start d-flex justify-content-between align-items-center ${isHighlighted
+                    ? "bg-primary text-white"
+                    : isSelected
+                      ? "bg-primary-subtle text-primary fw-semibold"
+                      : "bg-body text-body"
+                    }`}
+                  style={{ cursor: "pointer", transition: "all 0.15s ease" }}
+                >
+                  <span>{getOptionLabel(option)}</span>
+                  {isSelected && (
+                    <i
+                      className={`ri-check-line ${isHighlighted ? "text-white" : "text-primary"
+                        }`}
+                    ></i>
+                  )}
+                </ListGroup.Item>
+              );
+            })}
+          </ListGroup>
+        </div>,
+        document.body
       )}
 
-      {isOpen && filteredOptions.length === 0 && (
-        <ListGroup
-          className="position-absolute shadow rounded-2 bg-body"
-          style={{
-            zIndex: 1050,
-            ...(direction === "up"
-              ? { bottom: "100%", marginBottom: "6px" }
-              : { top: "100%", marginTop: "-6px" }),
-            left: 0,
-            border: "1px solid var(--bs-border-color)",
-            width: "100%",
-            display: "flex",
-            flexDirection: "column",
-            overflowX: "hidden",
-          }}
-        >
-          <ListGroup.Item className="py-2 px-3 text-muted text-start bg-body border-0">
-            No options found
-          </ListGroup.Item>
-        </ListGroup>
+      {isOpen && filteredOptions.length === 0 && createPortal(
+        <div className="autocomplete-container" style={{ position: "absolute", ...listStyle }}>
+          <ListGroup
+            ref={listRef}
+            className="shadow rounded-2 bg-body"
+            style={{
+              border: "1px solid var(--bs-border-color)",
+              display: "flex",
+              flexDirection: "column",
+              overflowX: "hidden",
+              width: "100%"
+            }}
+          >
+            <ListGroup.Item className="py-2 px-3 text-muted text-start bg-body border-0">
+              No options found
+            </ListGroup.Item>
+          </ListGroup>
+        </div>,
+        document.body
       )}
     </div>
   );

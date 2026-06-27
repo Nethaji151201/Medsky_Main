@@ -230,6 +230,7 @@ const PatientsList = () => {
             gender: true,
             address: true
         },
+        columnReorder: true,
     });
     return (
         <div id="page_layout" className="cust-datatable">

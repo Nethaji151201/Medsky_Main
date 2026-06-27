@@ -3,6 +3,11 @@ import $ from "jquery";
 import "datatables.net-bs5/css/dataTables.bootstrap5.min.css";
 import "datatables.net-bs5";
 
+// Suppress alert warnings for missing/unmatched column values globally
+if ($.fn.dataTable) {
+  $.fn.dataTable.ext.errMode = "none";
+}
+
 // Helper to serialize columns including render functions to prevent unnecessary re-initializations
 const serializeColumns = (cols) => {
   if (!cols) return "";
@@ -42,7 +47,7 @@ const useDataTableMS = ({
   isFooter = false,
   isMultilang = false,
   bordered = false, // Dynamic and optional border parameter
-  columnReorder = true,
+  columnReorder = false,
 
   // Selection & Row interaction
   isLoading = false,
